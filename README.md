@@ -22,6 +22,10 @@ WIFI-TOOLKIT is a comprehensive, menu-driven utility designed for Wi-Fi penetrat
 *   **UI/UX Improvements:** A clean, professional, and responsive menu-driven interface.
 *   **Automatic Cleanup:** Restores all network settings upon exit.
 
+## Screenshots
+![WIFI-TOOLKIT Screenshot 1](screenshot/wifitoolkit.png)
+![WIFI-TOOLKIT Screenshot 2](screenshot/wifitoolkit2.png)
+
 ---
 
 ## Requirements
@@ -55,6 +59,18 @@ sudo apt install aircrack-ng mdk4 macchanger iw hostapd dnsmasq
 
 ## Termux Support
 Support for the Termux environment on Android is currently under development. A version compiled specifically for ARM architectures will be made available in a future release. Stay tuned!
+
+## Support the Project
+
+If you appreciate this tool and would like to support its development, consider buying me a coffee! Your support helps maintain and improve this project.
+
+[Buy Me a Coffee on Saweria](https://saweria.co/dimasla)
+
+## Accessing the Source Code
+
+The compiled `wifiToolkit` executable is provided for convenience. If you wish to access the raw, uncompiled source code (Python files), it is available upon supporting the project.
+
+Please consider supporting the development via the "Buy Me a Coffee" link above. After your contribution, you can contact us at `jimbonluis90@gmail.com` to request access to the source code.
 
 ## License
 This project is licensed under the MIT License.
