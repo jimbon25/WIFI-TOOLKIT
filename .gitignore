@@ -1,0 +1,19 @@
+# Directory for captured handshake files
+/handshakes/
+
+# Local development to-do list
+/TODO.md
+/ssidlist.txt
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+# Compiled executable
+wifiToolkit
+
+# Source code directories
+/main/
+/noKill/
+
+blacklist
