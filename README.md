@@ -47,7 +47,7 @@ sudo apt install aircrack-ng mdk4 macchanger iw hostapd dnsmasq
 ```
 
 ## Usage
-1.  Download the `wifiToolkit` executable from the [Releases page](https://github.com/YOUR_USERNAME/YOUR_REPO/releases).
+1.  Download the `wifiToolkit` executable from the [Releases page](https://github.com/jimbon25/WIFI-TOOLKIT/releases/tag/v2.9.1).
 2.  Make the file executable:
     ```bash
     chmod +x wifiToolkit
