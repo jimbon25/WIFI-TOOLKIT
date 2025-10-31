@@ -32,7 +32,7 @@ To effectively run an Evil Twin attack, especially with internet access for clie
 
 The `EvilTwin` program automates the following steps:
 
-1.  **Interface Selection:** You will be prompted to select the primary wireless interface for deauthentication (monitor mode) and the secondary interface for the fake AP (managed mode).
+1.  **Interface Selection:** When you launch the attack, the toolkit will first ensure a primary wireless interface is selected and put into monitor mode for deauthentication. Then, you will be prompted to select a secondary interface to be used for the fake AP (in managed mode).
 2.  **Target Scanning:** The program scans nearby Wi-Fi networks to identify the target AP to mimic.
 3.  **Target AP Selection:** You select the target AP from the discovered list. If the target AP uses WPA2, you will be asked to enter the WPA2 password.
 4.  **Fake AP Interface Preparation:**

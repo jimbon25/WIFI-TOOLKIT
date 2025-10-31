@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.9.3] - 2025-10-31
+
+### Changed
+- **Startup Workflow**: Refactored the script's startup sequence. The script now opens directly to the main menu. Interface selection and monitor mode activation are performed on-demand only when a feature requires them. This prevents `airmon-ng check kill` from running unnecessarily and disrupting other network connections at launch.
+- **Dependency Check**: Improved the initial dependency check to include optional tools (`hostapd`, `dnsmasq`). The script now shows a non-blocking warning if optional tools for the Evil Twin attack are missing, rather than failing later when the feature is used.
+
+### Fixed
+- **WiFi Jamming Attack**: Fixed a critical bug where the attack was unreliable due to a race condition when using `mdk4` in a loop. The feature has been refactored to use multiple `aireplay-ng` processes for a more stable and effective multi-target deauthentication attack.
+
 ## [2.9.2] - 2025-10-30
 
 ### Fixed
