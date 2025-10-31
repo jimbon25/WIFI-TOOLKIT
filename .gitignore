@@ -9,11 +9,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
+
 # Compiled executable
 wifiToolkit
 
 # Source code directories
-/main/
-/noKill/
 
 blacklist
