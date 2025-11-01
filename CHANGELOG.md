@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.9.4] - 2025-11-01
+
+### Added
+- **Network Bandwidth Limiter (Evil Limiter) Integration**: Integrated the powerful [Evil Limiter](https://github.com/bitbrute/evillimiter) tool as a new menu option. This feature allows users to monitor, analyze, and limit the bandwidth of devices on their local network. It operates on a managed (non-monitor mode) interface, requiring the selection of an active network connection.
+
+### Changed
+- **Main Menu Structure**: Added a new menu option `[0]` for the Network Bandwidth Limiter, adjusting the main menu selection prompt accordingly.
+
 ## [2.9.3] - 2025-10-31
 
 ### Changed

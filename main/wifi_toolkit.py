@@ -8,6 +8,7 @@ import shutil
 import random
 import threading
 import glob
+import shutil
 from datetime import datetime
 try:
     from msvcrt import getch
@@ -24,6 +25,7 @@ except ImportError:
             termios.tcsetattr(fd, termios.TCSADRAIN, old)
 
 from evilTwin import EvilTwin
+from limiter_tool import EvilLimiterRunner
 
 RED = '\033[0;31m'
 GREEN = '\033[0;32m'
@@ -246,7 +248,7 @@ class WifiToolkit:
 {YELLOW}   \\_/\\_/  |_____|  \\_/\\_/  \\___/|_|\\_\\____/|_____| |_| \\___/|_|\\_\\{NC}
 """
         print(art)
-        title = "WIFI-TOOL By dla v2.9.3 (this tool is free if you buy it, idiots)"
+        title = "WIFI-TOOL By dla v2.9.4 (this tool is free if someone sells it, scammer!)"
         print(f"{BLUE}{'=' * 70}{NC}")
         print(f"{YELLOW}{title.center(70)}{NC}")
         print(f"{BLUE}{'=' * 70}{NC}\n")
@@ -1854,12 +1856,83 @@ class WifiToolkit:
         if not self._ensure_monitor_mode():
             return
 
-        # Create a new instance every time to ensure it gets the correct interface
         self.evil_twin_instance = EvilTwin(self.interface, self._log)
         self.evil_twin_instance.start_attack()
         print(f"{GREEN}Press any key to return to the main menu...{NC}")
         getch()
             
+    def select_managed_interface(self):
+        """Detects and allows user to select a connected, managed wireless interface."""
+        print(f"{YELLOW}[*] Detecting connected wireless interfaces...{NC}")
+        interfaces = []
+        
+        try:
+            all_ifaces = os.listdir('/sys/class/net')
+            
+            for iface in all_ifaces:
+                if os.path.exists(f'/sys/class/net/{iface}/phy80211'):
+                    iwconfig_res = self._run_command(['iwconfig', iface], quiet=True)
+                    if iwconfig_res and 'Mode:Managed' in iwconfig_res.stdout:
+                        ip_res = self._run_command(['ip', 'addr', 'show', iface], quiet=True)
+                        if ip_res and 'inet ' in ip_res.stdout:
+                            interfaces.append(iface)
+        except Exception as e:
+            print(f"{RED}Error detecting interfaces: {e}{NC}")
+            self._log("ERROR", f"Failed to detect managed interfaces: {e}")
+            return None
+
+        if not interfaces:
+            print(f"{RED}No connected, managed wireless interfaces found.{NC}")
+            print(f"{YELLOW}The bandwidth limiter requires an interface connected to a WiFi network.{NC}")
+            time.sleep(4)
+            return None
+
+        while True:
+            print("\nPlease select the interface connected to the target network:")
+            for i, iface in enumerate(interfaces):
+                print(f"  {i + 1}) {iface}")
+            print(f"  {len(interfaces) + 1}) Cancel")
+
+            choice = input(f"\n{YELLOW}Select an interface [1-{len(interfaces) + 1}]: {NC}").strip()
+            if choice == str(len(interfaces) + 1):
+                return None
+            try:
+                selected_index = int(choice) - 1
+                if 0 <= selected_index < len(interfaces):
+                    selected_iface = interfaces[selected_index]
+                    print(f"{GREEN}[✔] Interface selected: {selected_iface}{NC}")
+                    return selected_iface
+                else:
+                    print(f"{RED}Invalid selection. Please try again.{NC}")
+            except ValueError:
+                print(f"{RED}Invalid input. Please enter a number.{NC}")
+            time.sleep(1)
+
+    def run_bandwidth_limiter(self):
+        """Initializes and runs the Evil Limiter tool."""
+        self._print_header()
+        print(f"{YELLOW}[*] Initializing Bandwidth Limiter (Evil Limiter)...{NC}")
+        
+        required_deps = ["tc", "iptables", "sysctl"]
+        missing_deps = [dep for dep in required_deps if not shutil.which(dep)]
+        if missing_deps:
+            print(f"{RED}Error: Missing dependencies for Evil Limiter: {', '.join(missing_deps)}{NC}")
+            print(f"{YELLOW}Please install them (e.g., sudo apt install iproute2 iptables kmod){NC}")
+            time.sleep(4)
+            return
+
+        selected_interface = self.select_managed_interface()
+        if not selected_interface:
+            print(f"{RED}[!] No interface selected. Returning to main menu.{NC}")
+            time.sleep(2)
+            return
+
+        limiter_runner = EvilLimiterRunner(selected_interface, self._log)
+        limiter_runner.run()
+        
+        print(f"{GREEN}Press any key to return to the main menu...{NC}")
+        getch()
+
     def show_main_menu(self):
         """Displays a cleaner main menu and handles user choices."""
         while True:
@@ -1890,6 +1963,7 @@ class WifiToolkit:
 
             # --- Main Menu ---
             print(f"\n{BLUE}---[ MAIN MENU ]---{NC}")
+            print(f"  [{GREEN}0{NC}] Network Bandwidth Limiter (Evil Limiter)")
             print(f"  [{GREEN}1{NC}] Scan for Networks (airodump-ng)")
             print(f"  [{GREEN}2{NC}] Launch Mass Attack (mdk4)")
             print(f"  [{GREEN}3{NC}] Launch Targeted Attack (aireplay-ng)")
@@ -1901,12 +1975,13 @@ class WifiToolkit:
             print(f"  [{GREEN}9{NC}] Exit and Restore")
             print(f"{BLUE}-------------------{NC}")
             
-            print(f"\n{YELLOW}Select an option [1-9]:{NC} ", end='', flush=True)
+            print(f"\n{YELLOW}Select an option [0-9]:{NC} ", end='', flush=True)
             choice = getch()
             if isinstance(choice, bytes):
                 choice = choice.decode('utf-8')
 
-            if choice == '1': self.run_airodump_scan()
+            if choice == '0': self.run_bandwidth_limiter()
+            elif choice == '1': self.run_airodump_scan()
             elif choice == '2': self.run_mdk4_attack()
             elif choice == '3': self.run_interactive_attack()
             elif choice == '4': self.run_handshake_capture()

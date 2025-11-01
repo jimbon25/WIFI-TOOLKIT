@@ -1,0 +1,31 @@
+[ CHANGELOG ]
+
+[ v1.5.0 ]
+- Added host bandwidth usage analysis without limiting (e.g.: analyze 2,3,4 --duration 120)
+- Added ability to detect host reconnections with different IP addresses (watch)
+- Updated description
+- Minor CLI text updates
+- Minor code refactoring
+- Minor thread safety improvements
+
+[ v1.4.0 ]
+- Bandwidth usage can now be monitored with (e.g.: monitor --interval 2000)
+- Fix coding/naming convention issues
+
+[ v1.3.0 ]
+- Possibility to differentiate between upload / download limit (e.g.: limit 0 250kbit --download)
+- Allow referencing hosts by IP/MAC address
+- Updated tc (traffic control) settings: burst / ceil configuration
+- Force hosts table to be displayed even when it doesn't fit the terminal (hosts --force)
+
+[ v1.2.0 ]
+- Specify a range when scanning for hosts (e.g.: scan --range 10.0.0.1-10.0.0.20)
+- Set the gateway MAC manually, if not resolved automatically (e.g.: -m fc:fb:23:dd:ac:63)
+- Quit the application using 'quit' or 'exit' command
+- Fix cleanup bug
+- Fix error when binaries are not in /sbin
+
+[ v1.1.0 ]
+- Manually add customized hosts using 'add' command (e.g.: add 192.168.178.24 --mac fc:fb:23:dd:ac:63)
+- Multiple host selection using a comma separated IDs (e.g.: 6,3,5)
+- Select all hosts at once using 'all' instead of comma separated IDs
