@@ -79,7 +79,7 @@ This tool is designed for and tested on **Linux-based operating systems** due to
 For Windows users, it is recommended to run `wifiToolkit` within a **Windows Subsystem for Linux (WSL)** environment to ensure all functionalities work as intended.
 
 ## Usage
-1.  Download the `wifiToolkit` executable from the [Releases page](https://github.com/jimbon25/WIFI-TOOLKIT/releases/tag/v2.9.3).
+1.  Download the `wifiToolkit` executable from the [Releases page](https://github.com/jimbon25/WIFI-TOOLKIT/releases/tag/v2.9.4).
 2.  Make the file executable:
     ```bash
     chmod +x wifiToolkit
@@ -87,6 +87,10 @@ For Windows users, it is recommended to run `wifiToolkit` within a **Windows Sub
 3.  Run the tool with root privileges:
     ```bash
     sudo ./wifiToolkit
+    ```
+4.  **Alternatively, run the Python script directly (requires Python 3 installed):
+    ```bash
+    sudo python3 main/wifi_toolkit.py
     ```
 
 ## Termux Support
