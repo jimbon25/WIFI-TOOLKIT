@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.9.5] - 2025-11-02
+
+### Fixed
+- **Network Bandwidth Limiter**: Resolved a critical bug that caused the limiter feature (Menu 0) to fail on startup. The integration with `evillimiter` has been stabilized, ensuring all its dependencies and modules are loaded correctly.
+- **Standalone Executable**: Addressed multiple pathing and module loading issues that specifically affected the compiled version of the tool.
+
+### Changed
+- **Build Process**: Optimized the compilation process to significantly reduce the final size of the standalone executable.
+
+### Added
+- **Compilation Guide**: Added `COMPILING.md`, a comprehensive guide for compiling the project from source.
+- **Dependencies File**: Added `requirements.txt` for easier installation of Python dependencies.
+
 ## [2.9.4] - 2025-11-01
 
 ### Added

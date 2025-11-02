@@ -4,7 +4,7 @@ import os.path
 import argparse
 import platform
 import collections
-import pkg_resources
+from evillimiter import __version__, __description__
 
 import evillimiter.networking.utils as netutils
 from evillimiter.menus.main_menu import MainMenu
@@ -15,25 +15,12 @@ from evillimiter.console.io import IO
 InitialArguments = collections.namedtuple('InitialArguments', 'interface, gateway_ip, netmask, gateway_mac')
 
 
-def get_init_content():
-    with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), '__init__.py'), 'r') as f:
-        return f.read()
-
-
 def get_version():
-    version_match = re.search(r'^__version__ = [\'"](\d\.\d\.\d)[\'"]', get_init_content(), re.M)
-    if version_match:
-        return version_match.group(1)
-    
-    raise RuntimeError('Unable to locate version string.')
+    return __version__
 
 
 def get_description():
-    desc_match = re.search(r'^__description__ = [\'"]((.)*)[\'"]', get_init_content(), re.M)
-    if desc_match:
-        return desc_match.group(1)
-    
-    raise RuntimeError('Unable to locate description string.')
+    return __description__
 
 
 def is_privileged():
