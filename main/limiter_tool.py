@@ -4,10 +4,10 @@ import sys
 import time
 import subprocess
 
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-evillimiter_path = os.path.join(project_root, 'evillimiter')
-if evillimiter_path not in sys.path:
-    sys.path.insert(0, evillimiter_path)
+RED = '\033[0;31m'
+GREEN = '\033[0;32m'
+YELLOW = '\033[1;33m'
+NC = '\033[0m'
 
 try:
     import evillimiter.networking.utils as netutils
@@ -21,16 +21,10 @@ except ImportError as e:
     netutils = None
     MainMenu = None
 
-RED = '\033[0;31m'
-GREEN = '\033[0;32m'
-YELLOW = '\033[1;33m'
-NC = '\033[0m'
-
 class EvilLimiterRunner:
     def __init__(self, interface, log_func):
         self.interface = interface
         self._log = log_func
-        self.original_cwd = os.getcwd()
 
     def run(self):
         """
@@ -42,17 +36,12 @@ class EvilLimiterRunner:
 
         print(f"{YELLOW}[*] Initializing Evil Limiter...{NC}")
         self._log("INFO", "Initializing Evil Limiter integration.")
-
-        evillimiter_root = os.path.join(project_root, 'evillimiter')
-        if os.path.isdir(evillimiter_root):
-            os.chdir(evillimiter_root)
         
         gateway_ip = netutils.get_default_gateway()
         if not gateway_ip:
             print(f"{RED}[!] Could not determine default gateway for your network.{NC}")
             print(f"{YELLOW}    Please ensure you are connected to a network.{NC}")
             self._log("ERROR", "Evil Limiter: Could not get default gateway.")
-            os.chdir(self.original_cwd)
             time.sleep(3)
             return
 
@@ -63,7 +52,6 @@ class EvilLimiterRunner:
             print(f"{RED}[!] Failed to resolve network parameters for interface {self.interface}.{NC}")
             print(f"{RED}    Make sure the interface is connected to a network and has an IP address.{NC}")
             self._log("ERROR", f"Could not resolve network parameters for {self.interface}.")
-            os.chdir(self.original_cwd)
             time.sleep(3)
             return
 
@@ -79,7 +67,6 @@ class EvilLimiterRunner:
         if not netutils.enable_ip_forwarding():
             print(f"{RED}[!] Failed to enable IP forwarding. This is required for limiting.{NC}")
             self._log("ERROR", "Failed to enable IP forwarding for Evil Limiter.")
-            os.chdir(self.original_cwd)
             return
             
         if not netutils.create_qdisc_root(self.interface):
@@ -87,7 +74,6 @@ class EvilLimiterRunner:
             print(f"{YELLOW}    This can happen if a previous session crashed. Try restarting the script.{NC}")
             self._log("ERROR", f"Failed to create qdisc root for {self.interface}.")
             netutils.disable_ip_forwarding()
-            os.chdir(self.original_cwd)
             return
 
         print(f"{GREEN}[✔] System configured for traffic shaping.{NC}")
@@ -106,5 +92,4 @@ class EvilLimiterRunner:
             netutils.delete_qdisc_root(self.interface)
             netutils.disable_ip_forwarding()
             print(f"{GREEN}[✔] Cleanup complete.{NC}")
-            os.chdir(self.original_cwd)
             time.sleep(1)

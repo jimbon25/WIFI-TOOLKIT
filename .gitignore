@@ -16,3 +16,7 @@ wifiToolkit
 # Source code directories
 
 blacklist
+
+# Generated documentation and dependency files
+/COMPILING.md
+/requirements.txt
