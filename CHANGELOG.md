@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.9.6] - 2025-11-03
+
+### Added
+- **SQL Injection (sqlmap) Integration**: Added a comprehensive, menu-driven wrapper for `sqlmap`. This feature automates complex tasks, providing a "Guided Dump" wizard to step through database enumeration and a powerful "Auto-Discover & Scan" option to crawl and test entire sites for SQL injection vulnerabilities.
+- **Network Mapper (nmap) Integration**: Integrated `nmap` as a new menu option for advanced network discovery and security auditing. It includes pre-configured scans for quick host discovery, intense service/OS detection, and automated vulnerability scanning using the `vulners` script.
+
 ## [2.9.5] - 2025-11-02
 
 ### Fixed

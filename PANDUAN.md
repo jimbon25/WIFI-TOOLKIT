@@ -1,6 +1,6 @@
 # WiFi Toolkit User Guide
 
-This document is a comprehensive guide to using all the features available in the `wifiToolkit` program.
+This document provides a comprehensive guide to using all the features available in the `wifiToolkit` program.
 
 ---
 
@@ -33,11 +33,11 @@ When the program is run, you will be greeted with the main menu containing a lis
 - **Purpose:** For highly specific deauthentication attacks, targeting one AP and one or all clients connected to it.
 - **How to Use:**
     1. Select option `3`.
-    2. The program will scan for networks for 20 seconds.
-    3. You will be presented with a list of found APs. Select the AP number you want to attack.
-    4. The program will then display a list of clients connected to that AP.
-    5. You can choose to attack **one specific client** (by selecting its number) or **all clients** on that AP (by pressing the `a` key).
-    6. The attack will run continuously until stopped with `Ctrl+C`.
+2. The program will scan for networks for 20 seconds.
+3. You will be presented with a list of found APs. Select the AP number you want to attack.
+4. The program will then display a list of clients connected to that AP.
+5. You can choose to attack **one specific client** (by selecting its number) or **all clients** on that AP (by pressing the `a` key).
+6. The attack will run continuously until stopped with `Ctrl+C`.
 
 ### `[4] Automated Handshake Capture`
 
@@ -116,10 +116,37 @@ For more detailed usage instructions, requirements, and security considerations,
         - **TX Power:** Sets the signal strength of your WiFi card (lower is harder to detect).
     3. After configuration, stealth mode will be active and run in the background until you deactivate it again from the same menu.
 
-### `[9] Exit and Restore`
+### `[9] SQL Injection (sqlmap)`
+
+- **Purpose:** Provides an automated interface for `sqlmap` to discover and exploit SQL injection vulnerabilities on websites.
+- **How to Use:**
+    1.  Select option `9` to enter the `sqlmap` menu.
+    2.  You will be presented with several scanning options:
+        - **`1) Scan Single URL`**: Scans a specific URL for basic vulnerabilities.
+        - **`2) Auto-Discover & Scan Site`**: Crawls an entire website from a base URL to find and test all links and forms.
+        - **`3) Guided Dump (Wizard)`**: The most powerful feature. Guides you step-by-step: finding databases, selecting a database, finding tables, selecting a table, and finally dumping its contents. Highly automated.
+        - **`4-6)`**: Options to perform manual enumeration of databases, tables, or dumping table contents.
+        - **`7) Custom Scan`**: Allows you to enter custom `sqlmap` flags for full flexibility.
+        - **`8) Get OS Shell`**: Attempts to get an operating system shell on the target server if vulnerabilities allow.
+
+### `[10] Network Mapper (nmap)`
+
+- **Purpose:** Performs advanced network scanning for host discovery, service identification, and vulnerability detection.
+- **How to Use:**
+    1.  Select option `10` to enter the `nmap` menu.
+    2.  Enter your target (e.g., `192.168.1.0/24` for your entire network, or `192.168.1.1` for a single device).
+    3.  Choose a scan type:
+        - **`1) Quick Scan`**: A very fast scan to find active hosts and the most common open ports.
+        - **`2) Intense Scan`**: A deep scan that includes OS detection, service version detection, and runs default scripts. Provides the most comprehensive overview of the target.
+        - **`3) Ping Scan`**: Only checks which hosts are active on the network without port scanning.
+        - **`4) Vulnerability Scan`**: Uses the `vulners` script to check running services against known vulnerability databases (CVEs). **Highly recommended** for security assessment.
+        - **`5) UDP Scan`**: Scans for open UDP ports.
+        - **`6) Custom Scan`**: Allows you to enter your own `nmap` flags for full flexibility.
+
+### `[q] Exit and Restore`
 
 - **Purpose:** To exit the program safely.
-- **How to Use:** Select option `9`. The program will automatically:
+- **How to Use:** Select option `q`. The program will automatically:
     - Stop all active attack processes.
     - Restore your WiFi interface to "managed" (normal) mode.
     - Restore your original MAC address.
