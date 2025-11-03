@@ -52,7 +52,7 @@ WIFI-TOOLKIT is a comprehensive, menu-driven utility designed for Wi-Fi penetrat
 *   **Automatic Cleanup:** Restores all network settings upon exit.
 
 ## Screenshots
-![WIFI-TOOLKIT Screenshot](screenshot/wifitoolwok.png)
+![WIFI-TOOLKIT Screenshot](screenshot/sswok.png)
 
 ---
 
