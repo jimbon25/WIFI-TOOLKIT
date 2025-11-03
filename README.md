@@ -45,6 +45,8 @@ WIFI-TOOLKIT is a comprehensive, menu-driven utility designed for Wi-Fi penetrat
     *   **Beacon Flood Attack (mdk4):** Create thousands of fake APs to disrupt network scanners.
 *   **Evil Twin Attack:** Creates a fake AP mimicking a target network, with WPA2 support, to capture client traffic (requires 2 Wi-Fi adapters).
 *   **Automated Vulnerability Assessment:** Analyzes and labels networks by vulnerability level.
+*   **SQL Injection Automation (sqlmap):** A menu-driven `sqlmap` wrapper to automate database enumeration and exploitation, including a guided wizard for dumping data.
+*   **Advanced Network Mapping (nmap):** Integrates `nmap` for in-depth network discovery, service fingerprinting, and automated vulnerability scanning via NSE scripts like `vulners`.
 *   **Network Bandwidth Limiter (Evil Limiter):** Integrates the powerful Evil Limiter tool to monitor, analyze, and limit bandwidth of devices on your local network (requires a managed interface).
 *   **UI/UX Improvements:** A clean, professional, and responsive menu-driven interface.
 *   **Automatic Cleanup:** Restores all network settings upon exit.
@@ -65,12 +67,14 @@ This tool depends on several external command-line utilities. Ensure they are in
 | [iw](https://wireless.wiki.kernel.org/en/users/documentation/iw) | A modern nl80211 based CLI configuration utility. |
 | [hostapd](https://w1.fi/hostapd/)                         | User space daemon for AP and authentication servers. |
 | [dnsmasq](https://thekelleys.org.uk/dnsmasq/doc.html)      | A lightweight DHCP and caching DNS server.        |
+| [sqlmap](https://sqlmap.org/)                            | Automatic SQL injection and database takeover tool. |
+| [Nmap](https://nmap.org/)                                  | The Network Mapper for discovery and security auditing. |
 | [Evil Limiter](https://github.com/bitbrute/evillimiter)    | Bandwidth limiter for local network devices.      |
 
 You can install all requirements with the following command:
 ```bash
 sudo apt update
-sudo apt install aircrack-ng mdk4 macchanger iw hostapd dnsmasq iproute2 iptables evillimiter
+sudo apt install aircrack-ng mdk4 macchanger iw hostapd dnsmasq iproute2 iptables evillimiter sqlmap nmap
 ```
 
 ## Platform Support
