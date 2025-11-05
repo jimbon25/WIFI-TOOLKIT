@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Only the latest version of `wifiToolkit` is supported with security updates.
+Only the latest version of `wifiRATA` is supported with security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -10,7 +10,7 @@ Only the latest version of `wifiToolkit` is supported with security updates.
 
 ## Reporting a Vulnerability
 
-We take all security bugs in `wifiToolkit` seriously. Thank you for improving the security of our project. We appreciate your efforts and responsible disclosure and will make every effort to acknowledge your contributions.
+We take all security bugs in `wifiRATA` seriously. Thank you for improving the security of our project. We appreciate your efforts and responsible disclosure and will make every effort to acknowledge your contributions.
 
 To report a security vulnerability, please email `jimbonluis90@gmail.com` with a detailed description of the vulnerability, steps to reproduce it, and any potential impact.
 
