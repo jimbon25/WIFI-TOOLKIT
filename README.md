@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
+![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg?style=for-the-badge)
 ![Integrated: Evil Limiter](https://img.shields.io/badge/Integrated-Evil_Limiter-blue.svg?style=for-the-badge&logo=github)
 ![GitHub Stars](https://img.shields.io/github/stars/jimbon25/WIFI-TOOLKIT?style=social)
 
@@ -111,4 +111,4 @@ If you appreciate this tool and would like to support its development, consider 
 This project integrates and utilizes the core functionality of [Evil Limiter](https://github.com/bitbrute/evillimiter), a powerful tool for monitoring, analyzing, and limiting bandwidth of devices on a local network. We extend our gratitude to the original author, bitbrute, for their excellent work.
 
 ## License
-This project is licensed under the MIT License.
+This project is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).
