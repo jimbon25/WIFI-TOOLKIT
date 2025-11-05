@@ -80,17 +80,17 @@ sudo apt install aircrack-ng mdk4 macchanger iw hostapd dnsmasq iproute2 iptable
 ## Platform Support
 This tool is designed for and tested on **Linux-based operating systems** due to its heavy reliance on Linux-specific networking utilities (e.g., `airmon-ng`, `iptables`, `tc`).
 
-For Windows users, it is recommended to run `wifiToolkit` within a **Windows Subsystem for Linux (WSL)** environment to ensure all functionalities work as intended.
+For Windows users, it is recommended to run `wifiRATA` within a **Windows Subsystem for Linux (WSL)** environment to ensure all functionalities work as intended.
 
 ## Usage
-1.  Download the `wifiToolkit` executable from the [Releases page](https://github.com/jimbon25/WIFI-TOOLKIT/releases/tag/v2.9.4).
+1.  Download the `wifiRATA` executable from the [Releases page](https://github.com/jimbon25/WIFI-TOOLKIT/releases/tag/v2.9.4).
 2.  Make the file executable:
     ```bash
-    chmod +x wifiToolkit
+    chmod +x wifiRATA
     ```
 3.  Run the tool with root privileges:
     ```bash
-    sudo ./wifiToolkit
+    sudo ./wifiRATA
     ```
 4.  **Alternatively, run the Python script directly (requires Python 3 installed):
     ```bash

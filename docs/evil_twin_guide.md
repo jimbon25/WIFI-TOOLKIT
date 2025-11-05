@@ -1,12 +1,12 @@
 # Evil Twin Attack Guide
 
-This document explains the Evil Twin Attack feature in the `wifiToolkit` program, including how it works, its requirements, and important considerations.
+This document explains the Evil Twin Attack feature in the `wifiRATA` program, including how it works, its requirements, and important considerations.
 
 ## Overview
 
 An Evil Twin Attack is a technique where an attacker creates a fake Access Point (AP) that mimics a legitimate Wi-Fi network. The goal is to lure nearby devices to connect to the attacker's fake AP instead of the real one. Once connected, the attacker can monitor traffic, redirect victims to fake pages, or, with proper configuration, provide controlled internet access.
 
-The Evil Twin feature in `wifiToolkit` automates this process, including target scanning, fake AP creation with WPA2 support, DHCP server setup, and deauthenticating clients from the real AP.
+The Evil Twin feature in `wifiRATA` automates this process, including target scanning, fake AP creation with WPA2 support, DHCP server setup, and deauthenticating clients from the real AP.
 
 ## Requirements
 
@@ -61,9 +61,9 @@ The `EvilTwin` program automates the following steps:
 ## Usage
 
 1.  Ensure all [Requirements](#requirements) are met.
-2.  Run `wifiToolkit` with root privileges:
+2.  Run `wifiRATA` with root privileges:
     ```bash
-    sudo ./wifiToolkit
+    sudo ./wifiRATA
     ```
 3.  From the main menu, select the option to "Launch Evil Twin Attack".
 4.  Follow the on-screen instructions to select interfaces and the target AP.

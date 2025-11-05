@@ -1,6 +1,6 @@
 # WiFi Toolkit User Guide
 
-This document provides a comprehensive guide to using all the features available in the `wifiToolkit` program.
+This document provides a comprehensive guide to using all the features available in the `wifiRATA` program.
 
 ---
 
@@ -73,7 +73,7 @@ For more detailed usage instructions, requirements, and security considerations,
         *   **Use `Wireshark` or `TShark`:** This is the best way to view traffic. Open a new terminal and run `sudo wireshark -i <your_monitor_interface>` (e.g., `wlan0mon`) or `sudo tshark -i <your_monitor_interface>`. You will see data traffic from connected clients.
 
 - **Stopping the Attack:**
-    *   Press `Ctrl+C` in the terminal where the `wifiToolkit` program is running.
+    *   Press `Ctrl+C` in the terminal where the `wifiRATA` program is running.
     *   The program will automatically stop all attack processes (`hostapd`, `dnsmasq`, `aireplay-ng`), clean up temporary configuration files, and restore your interface to its normal state.
 
 ### `[6] Launch DoS Attack`
