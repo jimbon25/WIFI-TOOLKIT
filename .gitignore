@@ -20,3 +20,4 @@ blacklist
 # Generated documentation and dependency files
 /COMPILING.md
 /requirements.txt
+/main/wifi_toolkit.py
