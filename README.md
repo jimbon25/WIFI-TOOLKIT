@@ -3,8 +3,19 @@
 <div align="center">
 
 ![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg?style=for-the-badge)
+![Integrated: Aircrack-ng](https://img.shields.io/badge/Integrated-Aircrack--ng-blue.svg?style=for-the-badge&logo=github)
+![Integrated: MDK4](https://img.shields.io/badge/Integrated-MDK4-blue.svg?style=for-the-badge&logo=github)
+![Integrated: Macchanger](https://img.shields.io/badge/Integrated-Macchanger-blue.svg?style=for-the-badge&logo=github)
+![Integrated: iw](https://img.shields.io/badge/Integrated-iw-blue.svg?style=for-the-badge&logo=github)
+![Integrated: hostapd](https://img.shields.io/badge/Integrated-hostapd-blue.svg?style=for-the-badge&logo=github)
+![Integrated: dnsmasq](https://img.shields.io/badge/Integrated-dnsmasq-blue.svg?style=for-the-badge&logo=github)
+![Integrated: sqlmap](https://img.shields.io/badge/Integrated-sqlmap-blue.svg?style=for-the-badge&logo=github)
+![Integrated: Nmap](https://img.io/badge/Integrated-Nmap-blue.svg?style=for-the-badge&logo=github)
 ![Integrated: Evil Limiter](https://img.shields.io/badge/Integrated-Evil_Limiter-blue.svg?style=for-the-badge&logo=github)
 ![Integrated: Seeker](https://img.shields.io/badge/Integrated-Seeker-blue.svg?style=for-the-badge&logo=github)
+![Integrated: Nuclei](https://img.shields.io/badge/Integrated-Nuclei-blue.svg?style=for-the-badge&logo=github)
+![Integrated: php](https://img.shields.io/badge/Integrated-php-blue.svg?style=for-the-badge&logo=php)
+![Integrated: ssh](https://img.shields.io/badge/Integrated-ssh-blue.svg?style=for-the-badge&logo=ssh)
 ![GitHub Stars](https://img.shields.io/github/stars/jimbon25/WIFI-TOOLKIT?style=social)
 
 </div>
@@ -48,6 +59,7 @@ WIFI-TOOLKIT is a comprehensive, menu-driven utility designed for Wi-Fi penetrat
 *   **Automated Vulnerability Assessment:** Analyzes and labels networks by vulnerability level.
 *   **SQL Injection Automation (sqlmap):** A menu-driven `sqlmap` wrapper to automate database enumeration and exploitation, including a guided wizard for dumping data.
 *   **Advanced Network Mapping (nmap):** Integrates `nmap` for in-depth network discovery, service fingerprinting, and automated vulnerability scanning via NSE scripts like `vulners`.
+*   **Automated Vulnerability Scanner (Nuclei):** Integrates the powerful Nuclei scanner for customizable and template-based vulnerability scanning of web applications and services.
 *   **Network Bandwidth Limiter (Evil Limiter):** Integrates the powerful Evil Limiter tool to monitor, analyze, and limit bandwidth of devices on your local network (requires a managed interface).
 *   **Geolocation Attack (Seeker):** Automates the process of finding a target's location by generating a malicious link via `ngrok` and `Seeker`.
 *   **UI/UX Improvements:** A clean, professional, and responsive menu-driven interface.
@@ -71,6 +83,7 @@ This tool depends on several external command-line utilities. Ensure they are in
 | [dnsmasq](https://thekelleys.org.uk/dnsmasq/doc.html)      | A lightweight DHCP and caching DNS server.        |
 | [sqlmap](https://sqlmap.org/)                            | Automatic SQL injection and database takeover tool. |
 | [Nmap](https://nmap.org/)                                  | The Network Mapper for discovery and security auditing. |
+| [Nuclei](https://nuclei.sh/)                               | Fast and customizable vulnerability scanner.      |
 | [Evil Limiter](https://github.com/bitbrute/evillimiter)    | Bandwidth limiter for local network devices.      |
 | [Seeker](https://github.com/thewhiteh4t/seeker)            | Geolocation tool using a web server and ngrok.    |
 | `php`, `ssh`                                               | Required by Seeker for server and tunneling.      |
@@ -78,7 +91,7 @@ This tool depends on several external command-line utilities. Ensure they are in
 You can install all requirements with the following command:
 ```bash
 sudo apt update
-sudo apt install aircrack-ng mdk4 macchanger iw hostapd dnsmasq iproute2 iptables evillimiter sqlmap nmap php ssh
+sudo apt install aircrack-ng mdk4 macchanger iw hostapd dnsmasq iproute2 iptables evillimiter sqlmap nmap php ssh nuclei
 ```
 
 ## Platform Support

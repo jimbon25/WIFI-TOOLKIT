@@ -21,3 +21,4 @@ blacklist
 /COMPILING.md
 /requirements.txt
 /main/wifi_toolkit.py
+/main/nuclei_tool.py

@@ -134,10 +134,33 @@ Saat program dijalankan, Anda akan disambut dengan menu utama yang berisi daftar
     6. Ketika target membuka tautan tersebut dan menyetujui permintaan izin lokasi di browser mereka, data lokasi (termasuk lintang, bujur, akurasi, dan bahkan foto jika memungkinkan) akan muncul di terminal Anda.
     7. Tekan `Ctrl+C` untuk menghentikan serangan dan mematikan server.
 
-### `[12] Exit`
+### `[12] Automated Vulnerability Scanner (Nuclei)`
+
+- **Tujuan:** Menyediakan antarmuka otomatis untuk `Nuclei` guna melakukan pemindaian kerentanan yang dapat disesuaikan pada aplikasi web dan layanan.
+- **Cara Menggunakan:**
+    1. Pilih opsi `12` untuk masuk ke menu `Nuclei`.
+    2. Anda akan disajikan beberapa opsi pemindaian lanjutan:
+        - **`1) Set Templates (file/dir)`**: Tentukan file atau direktori template Nuclei yang akan digunakan.
+        - **`2) Exclude Tags`**: Kecualikan template berdasarkan tag tertentu.
+        - **`3) Set Template IDs`**: Sertakan template berdasarkan ID spesifik.
+        - **`4) Exclude Template IDs`**: Kecualikan template berdasarkan ID spesifik.
+        - **`5) Set Template Tags`**: Sertakan template berdasarkan tag (misalnya, `cve,rce,misconfig`).
+        - **`6) Set Authors`**: Sertakan template berdasarkan penulis.
+        - **`7) Set Severities`**: Tentukan tingkat keparahan kerentanan yang akan dipindai (misalnya, `critical,high,medium`).
+        - **`8) Exclude Severities`**: Kecualikan tingkat keparahan tertentu dari pemindaian.
+        - **`9) Set Rate-Limit`**: Atur batas kecepatan permintaan per detik.
+        - **`10) Enable Headless`**: Aktifkan mode headless untuk pemindaian berbasis browser.
+        - **`11) Set Proxy (http/socks5)`**: Konfigurasi proxy untuk lalu lintas pemindaian.
+        - **`12) Add Custom Header`**: Tambahkan header HTTP kustom ke permintaan.
+        - **`13) Follow Redirects`**: Kontrol apakah Nuclei harus mengikuti pengalihan HTTP.
+        - **`14) Follow Host Redirects`**: Kontrol apakah Nuclei harus mengikuti pengalihan ke host yang berbeda.
+        - **`15) Max Redirects`**: Tentukan jumlah maksimum pengalihan yang akan diikuti.
+    3. Setelah mengkonfigurasi opsi, Anda dapat memulai pemindaian.
+
+### `[13] Exit`
 
 - **Tujuan:** Untuk keluar dari program dengan aman.
-- **Cara Menggunakan:** Pilih opsi `12`. Program akan secara otomatis:
+- **Cara Menggunakan:** Pilih opsi `13`. Program akan secara otomatis:
     - Menghentikan semua proses serangan yang aktif.
     - Mengembalikan antarmuka WiFi Anda ke mode "managed" (normal).
     - Mengembalikan alamat MAC asli Anda.

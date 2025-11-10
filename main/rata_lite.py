@@ -3,9 +3,7 @@ import os
 import sys
 import subprocess
 import time
-import re
 import shutil
-import json
 try:
     import requests
 except ImportError:
@@ -90,7 +88,7 @@ class WifiToolkitLite:
         print(f"  release from the official GitHub page.")
         print()
         print(f"  {GREEN}Download Link:{NC}")
-        print(f"  {BLUE}https://github.com/jimbon25/WIFI-TOOLKIT/releases/tag/v2.9.6{NC}")
+        print(f"  {BLUE}https://github.com/jimbon25/WIFI-TOOLKIT/releases/latest{NC}")
         print()
         print(f"{YELLOW}==================================================================={NC}")
         print(f"\n{GREEN}Press any key to return to the main menu...{NC}")
@@ -170,12 +168,11 @@ class WifiToolkitLite:
             print(f"{YELLOW}[*] When you are finished, press Ctrl+C in the Seeker prompt to stop.{NC}")
             time.sleep(4)
 
-            # Flush stdin to prevent input from bleeding into the subprocess
             try:
                 import termios
                 termios.tcflush(sys.stdin, termios.TCIFLUSH)
             except ImportError:
-                pass # Not on a Unix-like system
+                pass
 
             seeker_dir = os.path.join(os.getcwd(), 'seeker')
             subprocess.run(['python3', seeker_script], cwd=seeker_dir)
@@ -200,27 +197,29 @@ class WifiToolkitLite:
         while True:
             self._print_header()
             print(f"{YELLOW}Select an option:{NC}")
-            print(f"  {BLUE}[1]{NC} Network Scanning (airodump-ng)")
-            print(f"  {BLUE}[2]{NC} DoS Attacks (mdk4, aireplay)")
-            print(f"  {BLUE}[3]{NC} Mass Deauthentication (mdk4)")
-            print(f"  {BLUE}[4]{NC} Interactive Deauth (aireplay-ng)")
-            print(f"  {BLUE}[5]{NC} Handshake Capture")
-            print(f"  {BLUE}[6]{NC} Evil Twin Attack")
-            print(f"  {BLUE}[7]{NC} SQL Injection (sqlmap)")
-            print(f"  {BLUE}[8]{NC} Network Mapper (nmap)")
-            print(f"  {BLUE}[9]{NC} Stealth Mode")
+            print(f"  {BLUE}[1]{NC}  Network Scanning (airodump-ng)")
+            print(f"  {BLUE}[2]{NC}  DoS Attacks (mdk4, aireplay)")
+            print(f"  {BLUE}[3]{NC}  Mass Deauthentication (mdk4)")
+            print(f"  {BLUE}[4]{NC}  Interactive Deauth (aireplay-ng)")
+            print(f"  {BLUE}[5]{NC}  Handshake Capture")
+            print(f"  {BLUE}[6]{NC}  Evil Twin Attack")
+            print(f"  {BLUE}[7]{NC}  SQL Injection (sqlmap)")
+            print(f"  {BLUE}[8]{NC}  Network Mapper (nmap)")
+            print(f"  {BLUE}[9]{NC}  Stealth Mode")
             print(f"  {BLUE}[10]{NC} Bandwidth Limiter (evillimiter)")
-            print(f"  {GREEN}[11]{NC} Geolocation Attack (Seeker)")
-            print(f"  {RED}[12]{NC} Exit")
-            print(f"\n{YELLOW}Enter your choice [1-12] and press Enter:{NC} ", end='')
+            print(f"  {BLUE}[11]{NC} Geolocation Attack (Seeker)")
+            print(f"  {BLUE}[12]{NC} Automated Vulnerability Scanner (Nuclei)")
+            print(f"  {RED}[13]{NC} Exit")
+
+            print(f"\n{YELLOW}Enter your choice [1-13] and press Enter:{NC} ", end='')
             choice = input().strip()
 
             if choice == '11':
                 self.run_seeker_attack()
-            elif choice == '12':
+            elif choice == '13':
                 print(f"{YELLOW}Exiting... Thank you for using RATA!{NC}")
                 break
-            elif choice in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
+            elif choice in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '12']:
                 self._show_download_prompt()
             else:
                 print(f"\n{RED}Invalid option. Please try again.{NC}")
