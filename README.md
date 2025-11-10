@@ -4,6 +4,7 @@
 
 ![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg?style=for-the-badge)
 ![Integrated: Evil Limiter](https://img.shields.io/badge/Integrated-Evil_Limiter-blue.svg?style=for-the-badge&logo=github)
+![Integrated: Seeker](https://img.shields.io/badge/Integrated-Seeker-blue.svg?style=for-the-badge&logo=github)
 ![GitHub Stars](https://img.shields.io/github/stars/jimbon25/WIFI-TOOLKIT?style=social)
 
 </div>
@@ -53,7 +54,7 @@ WIFI-TOOLKIT is a comprehensive, menu-driven utility designed for Wi-Fi penetrat
 *   **Automatic Cleanup:** Restores all network settings upon exit.
 
 ## Screenshots
-![WIFI-TOOLKIT Screenshot](screenshot/wifiss.png)
+![WIFI-TOOLKIT Screenshot](screenshot/wifiRATA.png)
 
 ---
 
