@@ -1,154 +1,145 @@
-# WiFi Toolkit User Guide
+# Panduan Pengguna WiFi Toolkit (RATA)
 
-This document provides a comprehensive guide to using all the features available in the `wifiRATA` program.
+Dokumen ini menyediakan panduan komprehensif untuk menggunakan semua fitur yang tersedia di program `wifiRATA`.
 
 ---
 
-## Main Menu
+## Menu Utama
 
-When the program is run, you will be greeted with the main menu containing a list of all available functions.
+Saat program dijalankan, Anda akan disambut dengan menu utama yang berisi daftar semua fungsi yang tersedia.
 
-### `[1] Scan for Networks (airodump-ng)`
+### `[1] Network Scanning (airodump-ng)`
 
-- **Purpose:** To scan and view WiFi networks and devices (clients) around you.
-- **How to Use:**
-    1. Select option `1`.
-    2. You will be given two choices:
-        - **`1) Standard Scan`**: Only displays networks and clients on the screen. Press `Ctrl+C` to stop and return to the menu.
-        - **`2) Scan and Save`**: Similar to a standard scan, but also saves all captured packets to a `.cap` file in the current directory. You will be asked to enter a filename for the output.
+- **Tujuan:** Untuk memindai dan melihat jaringan WiFi serta perangkat (klien) di sekitar Anda.
+- **Cara Menggunakan:**
+    1. Pilih opsi `1`.
+    2. Anda akan diberi dua pilihan:
+        - **`1) Standard Scan`**: Hanya menampilkan jaringan dan klien di layar. Tekan `Ctrl+C` untuk berhenti dan kembali ke menu.
+        - **`2) Scan and Save`**: Mirip seperti pemindaian standar, tetapi juga menyimpan semua paket yang ditangkap ke file `.cap` di direktori saat ini. Anda akan diminta memasukkan nama file untuk output.
 
-### `[2] Launch Mass Attack (mdk4)`
+### `[2] DoS Attacks (mdk4, aireplay)`
 
-- **Purpose:** To launch a mass attack (wide area) without needing to select a specific target. Useful for creating general disruption.
-- **How to Use:**
-    1. Select option `2`.
-    2. Choose the attack type:
-        - **`1) Deauthentication Flood (Broadcast)`**: Sends deauthentication packets to all nearby devices, causing mass connection disruption.
-        - **`2) Deauthentication Flood (From Target List)`**: Similar to above, but only targets APs whose MAC addresses are in the `blacklist.txt` file.
-        - **`3) Beacon Flood (From SSID List)`**: Creates hundreds to thousands of fake Access Points. Fake AP names are taken from the `ssidlist.txt` file. This will clutter the WiFi network list on nearby devices.
-    3. After selecting, the attack will run until you stop it with `Ctrl+C`.
-
-### `[3] Launch Targeted Attack (aireplay-ng)`
-
-- **Purpose:** For highly specific deauthentication attacks, targeting one AP and one or all clients connected to it.
-- **How to Use:**
-    1. Select option `3`.
-2. The program will scan for networks for 20 seconds.
-3. You will be presented with a list of found APs. Select the AP number you want to attack.
-4. The program will then display a list of clients connected to that AP.
-5. You can choose to attack **one specific client** (by selecting its number) or **all clients** on that AP (by pressing the `a` key).
-6. The attack will run continuously until stopped with `Ctrl+C`.
-
-### `[4] Automated Handshake Capture`
-
-- **Purpose:** The most efficient feature for capturing WPA/WPA2 Handshakes (needed for password cracking).
-- **How to Use:**
-    1. Select option `4`.
-    2. The program will scan for networks to find targets using WPA/WPA2 encryption.
-    3. Select the target AP from the displayed list.
-    4. The program will work **fully automatically**: running `airodump-ng` to listen, and `aireplay-ng` to provoke clients to reconnect.
-    5. The program will monitor this process. If a handshake is successfully captured, the attack will stop automatically.
-    6. **Result:** The full path to the `.cap` file containing the handshake will be displayed on the screen. The file is saved in a new folder named `handshakes/`.
-
-### `[5] Launch Evil Twin Attack`
-
-- **Purpose:** To create a fake Access Point (AP) that mimics a target network, with the aim of luring nearby devices to connect to your fake AP instead of the real one. This allows you to monitor traffic or redirect them to fake pages.
-For more detailed usage instructions, requirements, and security considerations, see [Evil Twin Attack Guide](docs/evil_twin_guide.md).
-- **How to Use:**
-    1. Select option `5` from the main menu.
-    2. The program will start scanning for nearby WiFi networks for 15 seconds.
-    3. After the scan is complete, you will be presented with a list of found APs. Select the number of the target AP you want to mimic (e.g., home or office AP).
-    4. **If the target AP uses WPA/WPA2**, the program will ask you to enter the WPA2 password for that AP. Make sure you enter the correct password so clients can connect.
-    5. The program will automatically:
-        *   Set your wireless interface to the target AP's channel.
-        *   Create a fake AP with the same name (ESSID) and MAC address (BSSID) as the target AP using **`hostapd`** (supports WPA2 encryption).
-        *   Set up a DHCP server using `dnsmasq` to provide IP addresses to clients connected to your fake AP.
-        *   Start a continuous deauthentication attack on the real AP using `aireplay-ng`, which will disconnect clients from the real AP.
-    6. You will see the message `[*] Evil Twin attack is now active. Clients should be connecting to your fake AP.` This means the attack is active.
-
-- **What to do when the attack is active:**
-    *   **Client Connection Notifications:** Each time a new client successfully connects to your fake AP and obtains an IP address, you will see a notification `[!!!] NEW CLIENT CONNECTED: IP=..., MAC=..., Hostname=...` directly in the terminal.
-    *   **Wait for Clients to Connect:** Devices disconnected from the real AP will search for networks with the same name. Since your fake AP has the same name and now supports WPA2, there is a high probability they will connect to your fake AP.
-    *   **Verify Connected Clients (Additional Methods):**
-        *   **Use `Wireshark` or `TShark`:** This is the best way to view traffic. Open a new terminal and run `sudo wireshark -i <your_monitor_interface>` (e.g., `wlan0mon`) or `sudo tshark -i <your_monitor_interface>`. You will see data traffic from connected clients.
-
-- **Stopping the Attack:**
-    *   Press `Ctrl+C` in the terminal where the `wifiRATA` program is running.
-    *   The program will automatically stop all attack processes (`hostapd`, `dnsmasq`, `aireplay-ng`), clean up temporary configuration files, and restore your interface to its normal state.
-
-### `[6] Launch DoS Attack`
-
-- **Purpose:** A dedicated menu for various types of Denial-of-Service (DoS) attacks to disrupt networks.
-- **How to Use:**
-    1. Select option `6`.
-    2. You will enter the DoS sub-menu:
-        - **Options 1-4** are standard attacks (Jamming, PMKID, Deauth, Beacon) that will ask you to enter the **channel** and **duration** of the attack.
-        - **Option `[5] Smart Adaptive Attack`** is the most advanced feature.
+- **Tujuan:** Menu khusus untuk berbagai jenis serangan Denial-of-Service (DoS) untuk mengganggu jaringan.
+- **Cara Menggunakan:**
+    1. Pilih opsi `2`.
+    2. Anda akan masuk ke sub-menu DoS:
+        - **Opsi 1-4** adalah serangan standar (Jamming, PMKID, Deauth, Beacon) yang akan meminta Anda memasukkan **channel** dan **durasi** serangan.
+        - **Opsi `[5] Smart Adaptive Attack`** adalah fitur paling canggih.
 
 #### Detail: `[5] Smart Adaptive Attack`
-- **Purpose:** Launches an intelligent DoS attack that can measure its own impact and automatically adjust its aggressiveness.
-- **How to Use:**
-    1. Select option `5` in the DoS menu.
-    2. The program will scan for targets with active clients.
-    3. Select the target AP from the list.
-    4. The program will start the attack in 'stealthy' mode while continuously monitoring its effectiveness (whether clients are actually disconnected).
-    5. If not effective, the program will automatically switch to a more aggressive strategy until the target is successfully disrupted.
-    6. Press `Ctrl+C` to stop the attack.
+- **Tujuan:** Meluncurkan serangan DoS cerdas yang dapat mengukur dampaknya sendiri dan secara otomatis menyesuaikan tingkat agresivitasnya.
+- **Cara Menggunakan:**
+    1. Pilih opsi `5` di menu DoS.
+    2. Program akan memindai target yang memiliki klien aktif.
+    3. Pilih AP target dari daftar.
+    4. Program akan memulai serangan dalam mode 'stealthy' sambil terus memantau efektivitasnya (apakah klien benar-benar terputus).
+    5. Jika tidak efektif, program akan secara otomatis beralih ke strategi yang lebih agresif hingga target berhasil diganggu.
+    6. Tekan `Ctrl+C` untuk menghentikan serangan.
 
-### `[7] Run Automated Chain`
+### `[3] Mass Deauthentication (mdk4)`
 
-- **Purpose:** To run several types of attacks sequentially and automatically.
-- **How to Use:**
-    1. Select option `7`.
-    2. You will enter the "attack chain" creation mode.
-    3. Press `1`, `2`, or `3` to add an attack to the chain.
-    4. You can also save (`s`) or load (`l`) existing attack chains.
-    5. After finishing the setup, press `d` (Done) to execute all attacks in the chain sequentially.
+- **Tujuan:** Untuk meluncurkan serangan massal (area luas) tanpa perlu memilih target spesifik. Berguna untuk menciptakan gangguan umum.
+- **Cara Menggunakan:**
+    1. Pilih opsi `3`.
+    2. Pilih jenis serangan:
+        - **`1) Deauthentication Flood (Broadcast)`**: Mengirim paket deautentikasi ke semua perangkat di sekitar, menyebabkan gangguan koneksi massal.
+        - **`2) Deauthentication Flood (From Target List)`**: Mirip seperti di atas, tetapi hanya menargetkan AP yang alamat MAC-nya ada di file `blacklist.txt`.
+        - **`3) Beacon Flood (From SSID List)`**: Membuat ratusan hingga ribuan Access Point palsu. Nama AP palsu diambil dari file `ssidlist.txt`. Ini akan mengacaukan daftar jaringan WiFi di perangkat sekitar.
+    3. Setelah memilih, serangan akan berjalan hingga Anda menghentikannya dengan `Ctrl+C`.
 
-### `[8] Toggle Stealth Mode`
+### `[4] Interactive Deauth (aireplay-ng)`
 
-- **Purpose:** To activate stealth mode to mask your attacks.
-- **How to Use:**
-    1. Select option `8` to enter the configuration menu.
-    2. You can set three parameters:
-        - **MAC Rotation Interval:** How often your MAC address will be automatically changed.
-        - **Channel Hopping Interval:** How often the program will switch WiFi channels.
-        - **TX Power:** Sets the signal strength of your WiFi card (lower is harder to detect).
-    3. After configuration, stealth mode will be active and run in the background until you deactivate it again from the same menu.
+- **Tujuan:** Untuk serangan deautentikasi yang sangat spesifik, menargetkan satu AP dan satu atau semua klien yang terhubung padanya.
+- **Cara Menggunakan:**
+    1. Pilih opsi `4`.
+    2. Program akan memindai jaringan selama 20 detik.
+    3. Anda akan disajikan daftar AP yang ditemukan. Pilih nomor AP yang ingin Anda serang.
+    4. Program kemudian akan menampilkan daftar klien yang terhubung ke AP tersebut.
+    5. Anda dapat memilih untuk menyerang **satu klien spesifik** (dengan memilih nomornya) atau **semua klien** di AP tersebut (dengan menekan tombol `a`).
+    6. Serangan akan berjalan terus menerus hingga dihentikan dengan `Ctrl+C`.
 
-### `[9] SQL Injection (sqlmap)`
+### `[5] Handshake Capture`
 
-- **Purpose:** Provides an automated interface for `sqlmap` to discover and exploit SQL injection vulnerabilities on websites.
-- **How to Use:**
-    1.  Select option `9` to enter the `sqlmap` menu.
-    2.  You will be presented with several scanning options:
-        - **`1) Scan Single URL`**: Scans a specific URL for basic vulnerabilities.
-        - **`2) Auto-Discover & Scan Site`**: Crawls an entire website from a base URL to find and test all links and forms.
-        - **`3) Guided Dump (Wizard)`**: The most powerful feature. Guides you step-by-step: finding databases, selecting a database, finding tables, selecting a table, and finally dumping its contents. Highly automated.
-        - **`4-6)`**: Options to perform manual enumeration of databases, tables, or dumping table contents.
-        - **`7) Custom Scan`**: Allows you to enter custom `sqlmap` flags for full flexibility.
-        - **`8) Get OS Shell`**: Attempts to get an operating system shell on the target server if vulnerabilities allow.
+- **Tujuan:** Fitur paling efisien untuk menangkap Handshake WPA/WPA2 (diperlukan untuk cracking password).
+- **Cara Menggunakan:**
+    1. Pilih opsi `5`.
+    2. Program akan memindai jaringan untuk mencari target yang menggunakan enkripsi WPA/WPA2.
+    3. Pilih AP target dari daftar yang ditampilkan.
+    4. Program akan bekerja **sepenuhnya otomatis**: menjalankan `airodump-ng` untuk mendengarkan, dan `aireplay-ng` untuk memancing klien agar terhubung kembali.
+    5. Program akan memantau proses ini. Jika handshake berhasil ditangkap, serangan akan berhenti secara otomatis.
+    6. **Hasil:** Path lengkap ke file `.cap` yang berisi handshake akan ditampilkan di layar. File disimpan di folder baru bernama `handshakes/`.
 
-### `[10] Network Mapper (nmap)`
+### `[6] Evil Twin Attack`
 
-- **Purpose:** Performs advanced network scanning for host discovery, service identification, and vulnerability detection.
-- **How to Use:**
-    1.  Select option `10` to enter the `nmap` menu.
-    2.  Enter your target (e.g., `192.168.1.0/24` for your entire network, or `192.168.1.1` for a single device).
-    3.  Choose a scan type:
-        - **`1) Quick Scan`**: A very fast scan to find active hosts and the most common open ports.
-        - **`2) Intense Scan`**: A deep scan that includes OS detection, service version detection, and runs default scripts. Provides the most comprehensive overview of the target.
-        - **`3) Ping Scan`**: Only checks which hosts are active on the network without port scanning.
-        - **`4) Vulnerability Scan`**: Uses the `vulners` script to check running services against known vulnerability databases (CVEs). **Highly recommended** for security assessment.
-        - **`5) UDP Scan`**: Scans for open UDP ports.
-        - **`6) Custom Scan`**: Allows you to enter your own `nmap` flags for full flexibility.
+- **Tujuan:** Untuk membuat Access Point (AP) palsu yang meniru jaringan target, dengan tujuan memancing perangkat di sekitar untuk terhubung ke AP palsu Anda alih-alih yang asli. Ini memungkinkan Anda untuk memantau lalu lintas atau mengarahkan mereka ke halaman palsu.
+- **Panduan Lengkap:** Untuk petunjuk penggunaan yang lebih detail, persyaratan, dan pertimbangan keamanan, lihat [Panduan Serangan Evil Twin](docs/evil_twin_guide.md).
 
-### `[q] Exit and Restore`
+### `[7] SQL Injection (sqlmap)`
 
-- **Purpose:** To exit the program safely.
-- **How to Use:** Select option `q`. The program will automatically:
-    - Stop all active attack processes.
-    - Restore your WiFi interface to "managed" (normal) mode.
-    - Restore your original MAC address.
-    - Delete temporary files.
-    - Generate a session summary report.
+- **Tujuan:** Menyediakan antarmuka otomatis untuk `sqlmap` guna menemukan dan mengeksploitasi kerentanan SQL injection di situs web.
+- **Cara Menggunakan:**
+    1. Pilih opsi `7` untuk masuk ke menu `sqlmap`.
+    2. Anda akan disajikan beberapa opsi pemindaian:
+        - **`1) Scan Single URL`**: Memindai URL spesifik untuk kerentanan dasar.
+        - **`2) Auto-Discover & Scan Site`**: Merayapi seluruh situs web dari URL dasar untuk menemukan dan menguji semua tautan dan formulir.
+        - **`3) Guided Dump (Wizard)`**: Fitur paling kuat. Memandu Anda langkah demi langkah: menemukan database, memilih database, menemukan tabel, memilih tabel, dan akhirnya membuang isinya. Sangat otomatis.
+        - **`4-6)`**: Opsi untuk melakukan enumerasi manual database, tabel, atau membuang isi tabel.
+        - **`7) Custom Scan`**: Memungkinkan Anda memasukkan flag `sqlmap` kustom untuk fleksibilitas penuh.
+        - **`8) Get OS Shell`**: Mencoba mendapatkan shell sistem operasi di server target jika kerentanan memungkinkan.
+
+### `[8] Network Mapper (nmap)`
+
+- **Tujuan:** Melakukan pemindaian jaringan tingkat lanjut untuk penemuan host, identifikasi layanan, dan deteksi kerentanan.
+- **Cara Menggunakan:**
+    1. Pilih opsi `8` untuk masuk ke menu `nmap`.
+    2. Masukkan target Anda (misalnya, `192.168.1.0/24` untuk seluruh jaringan Anda, atau `192.168.1.1` untuk satu perangkat).
+    3. Pilih jenis pemindaian:
+        - **`1) Quick Scan`**: Pemindaian sangat cepat untuk menemukan host aktif dan port terbuka yang paling umum.
+        - **`2) Intense Scan`**: Pemindaian mendalam yang mencakup deteksi OS, deteksi versi layanan, dan menjalankan skrip default. Memberikan gambaran paling komprehensif tentang target.
+        - **`3) Ping Scan`**: Hanya memeriksa host mana yang aktif di jaringan tanpa memindai port.
+        - **`4) Vulnerability Scan`**: Menggunakan skrip `vulners` untuk memeriksa layanan yang berjalan terhadap database kerentanan yang diketahui (CVE). **Sangat direkomendasikan** untuk penilaian keamanan.
+        - **`5) UDP Scan`**: Memindai port UDP yang terbuka.
+        - **`6) Custom Scan`**: Memungkinkan Anda memasukkan flag `nmap` Anda sendiri untuk fleksibilitas penuh.
+
+### `[9] Stealth Mode`
+
+- **Tujuan:** Untuk mengaktifkan mode siluman guna menyamarkan serangan Anda.
+- **Cara Menggunakan:**
+    1. Pilih opsi `9` untuk masuk ke menu konfigurasi.
+    2. Anda dapat mengatur tiga parameter:
+        - **MAC Rotation Interval:** Seberapa sering alamat MAC Anda akan diubah secara otomatis.
+        - **Channel Hopping Interval:** Seberapa sering program akan berpindah saluran WiFi.
+        - **TX Power:** Mengatur kekuatan sinyal kartu WiFi Anda (lebih rendah lebih sulit dideteksi).
+    3. Setelah konfigurasi, mode siluman akan aktif dan berjalan di latar belakang hingga Anda menonaktifkannya lagi dari menu yang sama.
+
+### `[10] Bandwidth Limiter (evillimiter)`
+
+- **Tujuan:** Untuk memantau, menganalisis, dan membatasi bandwidth (kecepatan internet) perangkat lain di jaringan lokal Anda.
+- **Penting:** Fitur ini berjalan pada antarmuka jaringan yang terhubung (mode *managed*), bukan mode monitor.
+- **Cara Menggunakan:**
+    1. Pilih opsi `10`.
+    2. Program akan mendeteksi antarmuka jaringan yang terhubung ke WiFi. Pilih salah satu.
+    3. `evillimiter` akan dimulai. Gunakan perintah seperti `scan` untuk menemukan host, dan `limit <ID> <rate>` untuk membatasi kecepatan mereka.
+    4. Gunakan perintah `help` di dalam `evillimiter` untuk melihat semua opsi yang tersedia.
+
+### `[11] Geolocation Attack (Seeker)`
+
+- **Tujuan:** Untuk menemukan lokasi geografis target secara akurat dengan cara mengirimkan sebuah tautan (link).
+- **Cara Menggunakan:**
+    1. Pilih opsi `11`.
+    2. Program akan secara otomatis memeriksa dependensi yang diperlukan (`php`, `ssh`, `ngrok`). Jika ada yang kurang, Anda akan diberi tahu.
+    3. Program akan memulai `ngrok` untuk membuat tunnel publik dan menjalankan server `php`.
+    4. Sebuah URL publik (misalnya, `https://random-string.ngrok.io`) akan ditampilkan di layar Anda.
+    5. **Tugas Anda adalah mengirim URL ini ke target** melalui media sosial, email, atau pesan.
+    6. Ketika target membuka tautan tersebut dan menyetujui permintaan izin lokasi di browser mereka, data lokasi (termasuk lintang, bujur, akurasi, dan bahkan foto jika memungkinkan) akan muncul di terminal Anda.
+    7. Tekan `Ctrl+C` untuk menghentikan serangan dan mematikan server.
+
+### `[12] Exit`
+
+- **Tujuan:** Untuk keluar dari program dengan aman.
+- **Cara Menggunakan:** Pilih opsi `12`. Program akan secara otomatis:
+    - Menghentikan semua proses serangan yang aktif.
+    - Mengembalikan antarmuka WiFi Anda ke mode "managed" (normal).
+    - Mengembalikan alamat MAC asli Anda.
+    - Menghapus file-file sementara.
+    - Menghasilkan laporan ringkasan sesi.

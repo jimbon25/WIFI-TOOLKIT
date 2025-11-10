@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.9.7] - 2025-11-10
+
+### Added
+- **Geolocation Attack (Seeker) Integration**: Integrated the [Seeker](https://github.com/thewhiteh4t/seeker) tool as a new menu option (`11`). This feature automates the process of starting an `ngrok` tunnel and launching Seeker to obtain a target's geographical location by sending them a link.
+- **Public "Lite" Script (`rata_lite.py`)**: Created a separate, distributable "lite" version of the script. This version displays the full menu for UX consistency but only enables the Geolocation feature, prompting users to download the full version for other features. This protects the main source code from being exposed.
+- **Seeker Dependency Checker**: Added a user-friendly dependency check for `php`, `ssh`, and `ngrok` that runs before the Geolocation attack is launched, guiding users on installation if needed.
+
+### Fixed
+- **Multi-Digit Menu Selection**: Replaced the `getch()` input method with the standard `input()` in the main menu loop. This resolves a critical bug where the script could not process two-digit menu selections (e.g., "11"), making the new feature inaccessible. Users now press Enter after their choice.
+
 ## [2.9.6] - 2025-11-03
 
 ### Added
