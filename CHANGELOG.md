@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.9.8] - 2025-11-10
+
+### Added
+- **Automated Vulnerability Scanner (Nuclei) Integration**: Integrated the Nuclei vulnerability scanner as a new menu option.
+- **Advanced Nuclei Scan Options**: Implemented advanced options for Nuclei, including filtering by severity exclusion, template listing/display, and redirect control.
+
 ## [2.9.7] - 2025-11-10
 
 ### Added

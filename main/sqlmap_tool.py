@@ -366,6 +366,28 @@ class SqlmapTool:
         print(f"\n{GREEN}[✔] OS Shell session finished. Press Enter to continue...{NC}")
         input()
 
+    def _custom_scan(self):
+        """Allows the user to enter custom sqlmap commands."""
+        os.system('clear')
+        print(f"{YELLOW}[*] SQLMAP - CUSTOM SCAN{NC}")
+        print(f"{YELLOW}[!] This option allows you to run any sqlmap command directly.{NC}")
+        print(f"{YELLOW}[!] Be careful with the commands you execute.{NC}")
+        try:
+            custom_command_args = input(f"{YELLOW}[?] Enter custom sqlmap arguments (e.g., -u http://example.com --dbs): {NC}").strip().split()
+            if not custom_command_args:
+                print(f"{RED}[!] No custom arguments provided.{NC}")
+                time.sleep(2)
+                return
+
+            command = ['sqlmap'] + custom_command_args
+            self._run_command(command)
+            print(f"\n{GREEN}[✔] Custom scan complete. Press any key to continue...{NC}")
+            input()
+        except Exception as e:
+            print(f"{RED}[!] An error occurred: {e}{NC}")
+            self._log("ERROR", f"Error in _custom_scan: {e}")
+            time.sleep(3)
+
     def run(self):
         """Displays the main sqlmap menu and handles user input."""
         while True:
@@ -385,8 +407,10 @@ class SqlmapTool:
             elif choice == '6':
                 self._dump_table()
             elif choice == '7':
-                self._get_os_shell()
+                self._custom_scan()
             elif choice == '8':
+                self._get_os_shell()
+            elif choice == '9':
                 print(f"{YELLOW}Returning to main menu...{NC}")
                 break
             else:
