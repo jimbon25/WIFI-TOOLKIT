@@ -48,6 +48,7 @@ WIFI-TOOLKIT is a comprehensive, menu-driven utility designed for Wi-Fi penetrat
 *   **SQL Injection Automation (sqlmap):** A menu-driven `sqlmap` wrapper to automate database enumeration and exploitation, including a guided wizard for dumping data.
 *   **Advanced Network Mapping (nmap):** Integrates `nmap` for in-depth network discovery, service fingerprinting, and automated vulnerability scanning via NSE scripts like `vulners`.
 *   **Network Bandwidth Limiter (Evil Limiter):** Integrates the powerful Evil Limiter tool to monitor, analyze, and limit bandwidth of devices on your local network (requires a managed interface).
+*   **Geolocation Attack (Seeker):** Automates the process of finding a target's location by generating a malicious link via `ngrok` and `Seeker`.
 *   **UI/UX Improvements:** A clean, professional, and responsive menu-driven interface.
 *   **Automatic Cleanup:** Restores all network settings upon exit.
 
@@ -70,11 +71,13 @@ This tool depends on several external command-line utilities. Ensure they are in
 | [sqlmap](https://sqlmap.org/)                            | Automatic SQL injection and database takeover tool. |
 | [Nmap](https://nmap.org/)                                  | The Network Mapper for discovery and security auditing. |
 | [Evil Limiter](https://github.com/bitbrute/evillimiter)    | Bandwidth limiter for local network devices.      |
+| [Seeker](https://github.com/thewhiteh4t/seeker)            | Geolocation tool using a web server and ngrok.    |
+| `php`, `ssh`                                               | Required by Seeker for server and tunneling.      |
 
 You can install all requirements with the following command:
 ```bash
 sudo apt update
-sudo apt install aircrack-ng mdk4 macchanger iw hostapd dnsmasq iproute2 iptables evillimiter sqlmap nmap
+sudo apt install aircrack-ng mdk4 macchanger iw hostapd dnsmasq iproute2 iptables evillimiter sqlmap nmap php ssh
 ```
 
 ## Platform Support
@@ -83,19 +86,25 @@ This tool is designed for and tested on **Linux-based operating systems** due to
 For Windows users, it is recommended to run `wifiRATA` within a **Windows Subsystem for Linux (WSL)** environment to ensure all functionalities work as intended.
 
 ## Usage
-1.  Download the `wifiRATA` executable from the [Releases page](https://github.com/jimbon25/WIFI-TOOLKIT/releases/tag/v2.9.4).
-2.  Make the file executable:
-    ```bash
-    chmod +x wifiRATA
-    ```
-3.  Run the tool with root privileges:
-    ```bash
-    sudo ./wifiRATA
-    ```
-4.  **Alternatively, run the Python script directly (requires Python 3 installed):
-    ```bash
-    sudo python3 main/wifi_toolkit.py
-    ```
+It is recommended to run the compiled version to access all features. The Python script is a "lite" version with limited functionality.
+
+1.  **Full Version (Recommended):**
+    *   Download the `wifiRATA` executable from the [Releases page](https://github.com/jimbon25/WIFI-TOOLKIT/releases/latest).
+    *   Make the file executable:
+        ```bash
+        chmod +x wifiRATA
+        ```
+    *   Run the tool with root privileges:
+        ```bash
+        sudo ./wifiRATA
+        ```
+
+2.  **Lite Version (Seeker Only):**
+    *   Clone the repository or download the source code.
+    *   Run the `rata_lite.py` script with root privileges:
+        ```bash
+        sudo python3 main/rata_lite.py
+        ```
 
 ## Termux Support
 Support for the Termux environment on Android is currently under development. A version compiled specifically for ARM architectures will be made available in a future release. Stay tuned!
@@ -109,6 +118,8 @@ If you appreciate this tool and would like to support its development, consider 
 ## Credits
 
 This project integrates and utilizes the core functionality of [Evil Limiter](https://github.com/bitbrute/evillimiter), a powerful tool for monitoring, analyzing, and limiting bandwidth of devices on a local network. We extend our gratitude to the original author, bitbrute, for their excellent work.
+
+We also integrate and utilize the [Seeker](https://github.com/thewhiteh4t/seeker) tool for geolocation attacks. Our thanks go to thewhiteh4t for creating this effective tool.
 
 ## License
 This project is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).
