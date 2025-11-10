@@ -10,7 +10,7 @@
 ![Integrated: hostapd](https://img.shields.io/badge/Integrated-hostapd-blue.svg?style=for-the-badge&logo=github)
 ![Integrated: dnsmasq](https://img.shields.io/badge/Integrated-dnsmasq-blue.svg?style=for-the-badge&logo=github)
 ![Integrated: sqlmap](https://img.shields.io/badge/Integrated-sqlmap-blue.svg?style=for-the-badge&logo=github)
-![Integrated: Nmap](https://img.io/badge/Integrated-Nmap-blue.svg?style=for-the-badge&logo=github)
+![Integrated: Nmap](https://img.shields.io/badge/Integrated-Nmap-blue.svg?style=for-the-badge&logo=github)
 ![Integrated: Evil Limiter](https://img.shields.io/badge/Integrated-Evil_Limiter-blue.svg?style=for-the-badge&logo=github)
 ![Integrated: Seeker](https://img.shields.io/badge/Integrated-Seeker-blue.svg?style=for-the-badge&logo=github)
 ![Integrated: Nuclei](https://img.shields.io/badge/Integrated-Nuclei-blue.svg?style=for-the-badge&logo=github)
@@ -19,6 +19,9 @@
 ![GitHub Stars](https://img.shields.io/github/stars/jimbon25/WIFI-TOOLKIT?style=social)
 
 </div>
+
+## Screenshots
+![WIFI-TOOLKIT Screenshot](screenshot/wifiRATA2.png)
 
 ### Table of Contents
 *   [Disclaimer](#-disclaimer)
@@ -64,9 +67,6 @@ WIFI-TOOLKIT is a comprehensive, menu-driven utility designed for Wi-Fi penetrat
 *   **Geolocation Attack (Seeker):** Automates the process of finding a target's location by generating a malicious link via `ngrok` and `Seeker`.
 *   **UI/UX Improvements:** A clean, professional, and responsive menu-driven interface.
 *   **Automatic Cleanup:** Restores all network settings upon exit.
-
-## Screenshots
-![WIFI-TOOLKIT Screenshot](screenshot/wifiRATA.png)
 
 ---
 
