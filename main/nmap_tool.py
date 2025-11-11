@@ -3,6 +3,21 @@ import os
 import subprocess
 import time
 import re
+import sys
+
+try:
+    from msvcrt import getch
+except ImportError:
+    import termios
+    import tty
+    def getch():
+        fd = sys.stdin.fileno()
+        old = termios.tcgetattr(fd)
+        try:
+            tty.setraw(fd)
+            return sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old)
 
 RED = '\033[0;31m'
 GREEN = '\033[0;32m'
@@ -155,7 +170,10 @@ class NmapTool:
         """Displays the main nmap menu and handles user input."""
         while True:
             self._show_nmap_menu()
-            choice = input(f"\n{YELLOW}Select an option [1-7]:{NC} ").strip()
+            print(f"\n{YELLOW}Press a key to select an option [1-7]:{NC} ", end='', flush=True)
+            choice = getch()
+            if isinstance(choice, bytes): choice = choice.decode('utf-8')
+            print(choice) # Echo the choice
 
             if choice == '1':
                 self._quick_scan()
@@ -170,10 +188,10 @@ class NmapTool:
             elif choice == '6':
                 self._custom_scan()
             elif choice == '7':
-                print(f"{YELLOW}Returning to main menu...{NC}")
+                print(f"\n{YELLOW}Returning to main menu...{NC}")
                 break
             else:
-                print(f"{RED}Invalid option. Please try again.{NC}")
+                print(f"\n{RED}Invalid option. Please try again.{NC}")
                 time.sleep(1)
                 
     def cleanup(self):

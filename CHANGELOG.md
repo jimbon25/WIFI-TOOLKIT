@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.10.0] - 2025-11-12
+
+### Added
+- **Flexible Exit Options**: Implemented a new exit sub-menu in the main toolkit, allowing users to choose between a full network cleanup/restore (recommended) or a quick exit without altering network settings.
+- **Structured SQLmap Output Parsing**: Enhanced `sqlmap_tool.py` to leverage `sqlmap`'s JSON output for database listing, table listing, and guided data dumping. This significantly improves the robustness and reliability of parsing `sqlmap` results, reducing fragility to output format changes.
+- **Formatted SQLmap Dump Display**: Added a helper function (`_print_dumped_data`) in `sqlmap_tool.py` to present JSON-parsed `sqlmap` dump results in a clear, formatted table.
+
+### Changed
+- **UI Consistency (Menu Navigation)**: Standardized menu navigation across `nmap_tool.py`, `sqlmap_tool.py` to use `getch()` for single-key selections. This provides a more responsive and consistent user experience, aligning with the main toolkit's menu.
+
+### Fixed
+- **Evil Twin Cleanup File Path**: Corrected a bug in `evilTwin.py` where a hardcoded, incorrect temporary file path was used during `dnsmasq` configuration cleanup, ensuring proper file removal.
+- **SQLmap Crawl Hang**: Resolved an issue in `sqlmap_tool.py`'s `_crawl_and_scan` function where `sqlmap` would hang due to interactive prompts. The `--batch` flag has been added to ensure non-interactive execution.
+
 ## [2.9.8] - 2025-11-10
 
 ### Added
@@ -30,14 +44,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 - **Network Bandwidth Limiter**: Resolved a critical bug that caused the limiter feature (Menu 0) to fail on startup. The integration with `evillimiter` has been stabilized, ensuring all its dependencies and modules are loaded correctly.
-- **Standalone Executable**: Addressed multiple pathing and module loading issues that specifically affected the compiled version of the tool.
-
-### Changed
-- **Build Process**: Optimized the compilation process to significantly reduce the final size of the standalone executable.
-
-### Added
-- **Compilation Guide**: Added `COMPILING.md`, a comprehensive guide for compiling the project from source.
-- **Dependencies File**: Added `requirements.txt` for easier installation of Python dependencies.
 
 ## [2.9.4] - 2025-11-01
 
