@@ -377,8 +377,11 @@ class EvilTwin:
 
         if self.hostapd_conf_path and os.path.exists(self.hostapd_conf_path):
             os.remove(self.hostapd_conf_path)
-        if os.path.exists("/tmp/dnsmasq_evil_twin.conf"):
-            os.remove("/tmp/dnsmasq_evil_twin.conf")
+        if self.dnsmasq_conf_path and os.path.exists(self.dnsmasq_conf_path):
+            try:
+                os.remove(self.dnsmasq_conf_path)
+            except OSError as e:
+                self._log("WARNING", f"Failed to remove dnsmasq config file {self.dnsmasq_conf_path}: {e}")
         if self.dnsmasq_log_path and os.path.exists(self.dnsmasq_log_path):
             os.remove(self.dnsmasq_log_path)
 
