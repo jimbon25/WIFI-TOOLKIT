@@ -11,6 +11,7 @@
 ![Integrated: dnsmasq](https://img.shields.io/badge/Integrated-dnsmasq-blue.svg?style=for-the-badge&logo=github)
 ![Integrated: sqlmap](https://img.shields.io/badge/Integrated-sqlmap-blue.svg?style=for-the-badge&logo=github)
 ![Integrated: Nmap](https://img.shields.io/badge/Integrated-Nmap-blue.svg?style=for-the-badge&logo=github)
+![Integrated: Garuda_DOS](https://img.shields.io/badge/Integrated-Garuda_DOS-blue.svg?style=for-the-badge&logo=github)
 ![Integrated: Evil Limiter](https://img.shields.io/badge/Integrated-Evil_Limiter-blue.svg?style=for-the-badge&logo=github)
 ![Integrated: Seeker](https://img.shields.io/badge/Integrated-Seeker-blue.svg?style=for-the-badge&logo=github)
 ![Integrated: Nuclei](https://img.shields.io/badge/Integrated-Nuclei-blue.svg?style=for-the-badge&logo=github)
@@ -21,7 +22,7 @@
 </div>
 
 ## Screenshots
-![WIFI-TOOLKIT Screenshot](screenshot/wifiTA.png)
+![WIFI-TOOLKIT Screenshot](screenshot/wifiRATA2.png)
 
 ### Table of Contents
 *   [Disclaimer](#-disclaimer)
@@ -131,9 +132,25 @@ If you appreciate this tool and would like to support its development, consider 
 
 ## Credits
 
-This project integrates and utilizes the core functionality of [Evil Limiter](https://github.com/bitbrute/evillimiter), a powerful tool for monitoring, analyzing, and limiting bandwidth of devices on a local network. We extend our gratitude to the original author, bitbrute, for their excellent work.
+This project is built upon and integrates the following excellent open-source tools and projects:
 
-We also integrate and utilize the [Seeker](https://github.com/thewhiteh4t/seeker) tool for geolocation attacks. Our thanks go to thewhiteh4t for creating this effective tool.
+- **[Evil Limiter](https://github.com/bitbrute/evillimiter)** - A powerful tool for monitoring, analyzing, and limiting bandwidth of devices on a local network. Thanks to [@bitbrute](https://github.com/bitbrute) for this exceptional work.
+
+- **[Seeker](https://github.com/thewhiteh4t/seeker)** - An effective geolocation tool using a web server and ngrok tunneling. Our gratitude goes to [@thewhiteh4t](https://github.com/thewhiteh4t) for creating this tool.
+
+- **[Aircrack-ng](https://www.aircrack-ng.org/)** - The industry-standard suite for Wi-Fi security auditing and testing. Essential foundation for WiFi penetration testing.
+
+- **[MDK4](https://github.com/aircrack-ng/mdk4)** - Advanced Wi-Fi testing tool for DoS attacks and network testing capabilities.
+
+- **[Nuclei](https://nuclei.sh/)** - A fast and customizable vulnerability scanner by [@projectdiscovery](https://github.com/projectdiscovery). Used for template-based vulnerability assessment.
+
+- **[sqlmap](https://sqlmap.org/)** - Automatic SQL injection and database takeover tool. Essential for web application security testing.
+
+- **[Nmap](https://nmap.org/)** - The Network Mapper for comprehensive network discovery and security auditing.
+
+- **[Garuda-DOS-Toolkit](https://github.com/Aditya-dom/Garuda-DOS-Toolkit)** - A modular DDoS attack framework with support for HTTP Flood, Slowloris, Mixed attacks, and advanced evasion techniques. Used for enhanced web server DoS capabilities.
+
+- **[Evil Twin Attack Concept](docs/evil_twin_guide.md)** - Inspired by common WiFi security testing methodologies.
 
 ## License
 This project is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).

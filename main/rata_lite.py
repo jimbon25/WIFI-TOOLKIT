@@ -4,6 +4,7 @@ import sys
 import subprocess
 import time
 import shutil
+from ddos_tool import DDoSAttackTool
 try:
     import requests
 except ImportError:
@@ -38,6 +39,19 @@ class WifiToolkitLite:
     def __init__(self):
         self.active_processes = []
         self.interface = "wlan0"
+        self.ddos_instance = None
+
+    def _log(self, level, message):
+        """Simple logging function for DDoSAttackTool."""
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+        print(f"[{timestamp}] [{level}] {message}")
+
+    @staticmethod
+    def _strip_ansi(text):
+        """Removes ANSI color codes from text."""
+        import re
+        ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+        return ansi_escape.sub('', text)
 
     def _run_command(self, command, shell=False, quiet=False):
         """Executes a shell command."""
@@ -67,15 +81,20 @@ class WifiToolkitLite:
 {YELLOW}               ██╔══██╗██╔══██║   ██║   ██╔══██║
 {YELLOW}               ██║  ██║██║  ██║   ██║   ██║  ██║
 {YELLOW}               ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝
+{YELLOW}                      LITE VERSION
 """
         print(art)
-        title = "RATA (Recon & Analysis Toolkit by DLA) v2.9.7 - LITE"
-        github_link = "https://github.com/jimbon25/WIFI-TOOLKIT"
-        saweria_link = "https://saweria.co/dimasla"
+        title = "RATA (Recon & Analysis Toolkit by DLA) v2.11.0"
+        
+        github_url = "https://github.com/jimbon25/WIFI-TOOLKIT"
+        saweria_url = "https://saweria.co/dimasla"
+        support_text = "Support the project:"
+        
         print(f"{BLUE}{'=' * 70}{NC}")
         print(f"{YELLOW}{title.center(70)}{NC}")
-        print(f"{YELLOW}{github_link.center(70)}{NC}")
-        print(f"{YELLOW}{f'Support the project: {saweria_link}'.center(70)}{NC}")
+        print(f"{BLUE}{github_url.center(70)}{NC}")
+        print(f"{YELLOW}{support_text.center(70)}{NC}")
+        print(f"{BLUE}{saweria_url.center(70)}{NC}")
         print(f"{BLUE}{'=' * 70}{NC}\n")
 
     def _show_download_prompt(self):
@@ -114,6 +133,31 @@ class WifiToolkitLite:
             return False
         
         print(f"{GREEN}[✔] All Seeker dependencies are installed.{NC}")
+        time.sleep(2)
+        return True
+
+    def _check_ddos_dependencies(self):
+        """Checks for dependencies required by the DDoS tool."""
+        self._print_header()
+        print(f"{YELLOW}[*] Checking dependencies for Web/Server DDoS Attack (aiohttp, fake-useragent, PyYAML)...{NC}")
+        missing_deps = []
+        deps_to_check = ['aiohttp', 'fake_useragent', 'yaml'] # Note: yaml is the module name for PyYAML package
+
+        for dep in deps_to_check:
+            try:
+                __import__(dep)
+            except ImportError:
+                missing_deps.append(dep)
+        
+        if missing_deps:
+            print(f"\n{RED}[!] Missing required Python dependencies for Web/Server DDoS Attack: {', '.join(missing_deps)}{NC}")
+            pip_deps = [dep.replace('yaml', 'PyYAML').replace('fake_useragent', 'fake-useragent') for dep in missing_deps]
+            print(f"{YELLOW}    Please install them using: pip install {' '.join(pip_deps)}{NC}")
+            print(f"\n{GREEN}Press any key to return to the main menu...{NC}")
+            getch()
+            return False
+        
+        print(f"{GREEN}[✔] All Web/Server DDoS Attack dependencies are installed.{NC}")
         time.sleep(2)
         return True
 
@@ -192,35 +236,70 @@ class WifiToolkitLite:
             print(f"{GREEN}Press any key to return to the main menu...{NC}")
             getch()
 
+    def run_ddos_attack(self):
+        """Initializes and runs the Web/Server DDoS Attack Tool."""
+        if not self._check_ddos_dependencies():
+            return
+
+        self._print_header()
+        print(f"{YELLOW}[*] Initializing Web/Server DDoS Attack Tool...{NC}")
+        
+        self.ddos_instance = DDoSAttackTool(self._log)
+        self.ddos_instance.run()
+        
+        print(f"{GREEN}Press any key to return to the main menu...{NC}")
+        getch()
+
+    def _run_nuclei_scanner(self):
+        """Displays download prompt for Nuclei (full version only)."""
+        self._show_download_prompt()
+
     def show_main_menu(self):
         """Displays the main menu and handles user input."""
         while True:
             self._print_header()
-            print(f"{YELLOW}Select an option:{NC}")
-            print(f"  {BLUE}[1]{NC}  Network Scanning (airodump-ng)")
-            print(f"  {BLUE}[2]{NC}  DoS Attacks (mdk4, aireplay)")
-            print(f"  {BLUE}[3]{NC}  Mass Deauthentication (mdk4)")
-            print(f"  {BLUE}[4]{NC}  Interactive Deauth (aireplay-ng)")
-            print(f"  {BLUE}[5]{NC}  Handshake Capture")
-            print(f"  {BLUE}[6]{NC}  Evil Twin Attack")
-            print(f"  {BLUE}[7]{NC}  SQL Injection (sqlmap)")
-            print(f"  {BLUE}[8]{NC}  Network Mapper (nmap)")
-            print(f"  {BLUE}[9]{NC}  Stealth Mode")
-            print(f"  {BLUE}[10]{NC} Bandwidth Limiter (evillimiter)")
-            print(f"  {BLUE}[11]{NC} Geolocation Attack (Seeker)")
-            print(f"  {BLUE}[12]{NC} Automated Vulnerability Scanner (Nuclei)")
-            print(f"  {RED}[13]{NC} Exit")
+            
+            print(f"┌{'─' * 58}┐")
+            print(f"│{YELLOW}{'Menu'.center(58)}{NC}│")
+            print(f"├{'─' * 58}┤")
 
-            print(f"\n{YELLOW}Enter your choice [1-13] and press Enter:{NC} ", end='')
+            menu_options = [
+                f"  {BLUE}[1]{NC}  Network Scanning (airodump-ng)",
+                f"  {BLUE}[2]{NC}  DoS Attacks (mdk4, aireplay)",
+                f"  {BLUE}[3]{NC}  Mass Deauthentication (mdk4)",
+                f"  {BLUE}[4]{NC}  Interactive Deauth (aireplay-ng)",
+                f"  {BLUE}[5]{NC}  Handshake Capture",
+                f"  {BLUE}[6]{NC}  Evil Twin Attack",
+                f"  {BLUE}[7]{NC}  SQL Injection (sqlmap)",
+                f"  {BLUE}[8]{NC}  Network Mapper (nmap)",
+                f"  {BLUE}[9]{NC}  Stealth Mode",
+                f"  {BLUE}[10]{NC} Bandwidth Limiter (evillimiter)",
+                f"  {YELLOW}[11]{NC} Geolocation Attack (Seeker)",
+                f"  {YELLOW}[12]{NC} Web/Server DDoS Attack",
+                f"  {BLUE}[13]{NC} Automated Vulnerability Scanner (Nuclei)",
+                f"  {RED}[14]{NC} Exit"
+            ]
+            
+            for option in menu_options:
+                padding = ' ' * (60 - 2 - len(self._strip_ansi(option)))
+                print(f"│{option}{padding}│")
+            
+            print(f"└{'─' * 58}┘\n") # Bottom border
+
+            print(f"{YELLOW}Enter your choice [1-14] and press Enter:{NC} ", end='')
             choice = input().strip()
 
-            if choice == '11':
+            if choice in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
+                self._show_download_prompt()
+            elif choice == '11':
                 self.run_seeker_attack()
+            elif choice == '12':
+                self.run_ddos_attack()
             elif choice == '13':
+                self._run_nuclei_scanner()
+            elif choice == '14':
                 print(f"{YELLOW}Exiting... Thank you for using RATA!{NC}")
                 break
-            elif choice in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '12']:
-                self._show_download_prompt()
             else:
                 print(f"\n{RED}Invalid option. Please try again.{NC}")
                 time.sleep(1)

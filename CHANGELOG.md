@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.11.0] - 2025-11-13
+
+### Changed
+- **UI Modernization - Modern Minimalist Design**: Complete visual redesign for cleaner:
+  - Converted multi-line status bar to compact single-line format
+  - Updated main menu to clean table layout with type indicators
+  - Refined all sub-menus for consistency and readability
+  - Cleaned up error/info messages with consistent label format
+
+### Added
+- **Hierarchical Menu Structure with Sub-Menus**: Refactored main menu to improve UX and tool organization:
+  - Reduced main menu from 15 items to 10 items
+  - Implemented 4 context-specific sub-menus for better tool grouping
+  - Clearer categorization: Network Scanning, WiFi Attacks, Handshakes, Web Security
+
 ## [2.10.0] - 2025-11-12
 
 ### Added

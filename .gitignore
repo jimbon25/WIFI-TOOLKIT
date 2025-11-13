@@ -5,20 +5,68 @@
 /TODO.md
 /ssidlist.txt
 
+# Compiled executable
+wifiRATA
+
+# Blacklist files
+blacklist
+blacklist.txt
+
 # Python cache files
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Compiled executable
-wifiRATA
+# Python egg info
+*.egg-info/
+*.egg
+dist/
+build/
 
-# Source code directories
+# Editor and IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.project
+.pydevproject
+.settings/
 
-blacklist
+# Virtual environments
+.venv
+venv/
+ENV/
+env/
 
-# Generated documentation and dependency files
-/COMPILING.md
-/requirements.txt
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Development documentation (auto-generated)
+/docs/development/
+
+# Log files (user home directory)
+~/.wifi-toolkit_logs/
+*.log
+
+# Configuration files (user-specific)
+.wifi_toolkit_config
+~/.wifi_toolkit_config
+
+# Cracking results and logs
+cracking_results/
+cracking_log.txt
+
+# Temporary and build files
+*.tmp
+*.bak
+**/tmp/
+
 /main/wifi_toolkit.py
+/main/password_cracker_tool.py
 /main/nuclei_tool.py
+/COMPILING.md

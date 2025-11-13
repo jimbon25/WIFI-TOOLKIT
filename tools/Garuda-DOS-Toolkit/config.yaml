@@ -1,0 +1,13 @@
+target: "http://example.com"
+
+method: "mixed"
+
+connections: 250
+
+duration: 120
+
+stealth: true
+
+attacks:
+  - http-flood
+  - slowloris
