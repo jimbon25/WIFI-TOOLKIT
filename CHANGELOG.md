@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.11.1] - 2025-11-14
+
+### Added
+- **Hybrid Attack Feature (Deauth + Beacon Flood)**: New advanced attack mode
+- **Hybrid Attack SSID File Picker**: Auto-discovery of SSID list files across 5 search locations with interactive menu selection. Users can now choose from multiple SSID lists (default, aggressive, stealth, or custom).
+- **Hybrid Attack Progress Visualization**: Real-time progress display for beacon flood attacks:
+- Multi-threaded orchestration: 1 thread per target deauth + 1 beacon flood thread
+  - Network scanning with target selection
+  - Support for flexible SSID list loading from external files
+  - Interactive menu for duration, target selection, and attack configuration
+  - Integrated into main menu as option 5 in `show_attack_suite_menu()`
+- **SSID List Flexibility**: Enhanced beacon flood to support external SSID files with automatic fallback to hardcoded default (20 SSIDs) if no file found.
+- **Test SSID Files**: Created two sample SSID lists for different attack strategies:
+  - `ssidlist_aggressive.txt`: 15 aggressive/noisy network names
+  - `ssidlist_stealth.txt`: 13 stealth/hidden network names
+- **Hybrid Attack Documentation**: Comprehensive guides and quick references for the new hybrid attack feature (3 documentation files, 42 KB total).
+  - Timed attacks: 50-character progress bar with percentage and countdown timer
+  - Continuous mode: Rotating spinner animation with elapsed time counter
+  - Updates every 1 second for smooth visual feedback
+
 ## [2.11.0] - 2025-11-13
 
 ### Changed
@@ -18,6 +38,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - Reduced main menu from 15 items to 10 items
   - Implemented 4 context-specific sub-menus for better tool grouping
   - Clearer categorization: Network Scanning, WiFi Attacks, Handshakes, Web Security
+- **Hybrid Attack in RATA Lite Menu**: Added Hybrid Attack (Deauth + Beacon Flood) as option 13 in `rata_lite.py` with download prompt, promoting the full version feature.
 
 ## [2.10.0] - 2025-11-12
 

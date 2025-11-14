@@ -84,7 +84,7 @@ class WifiToolkitLite:
 {YELLOW}                      LITE VERSION
 """
         print(art)
-        title = "RATA (Recon & Analysis Toolkit by DLA) v2.11.0"
+        title = "RATA (Recon & Analysis Toolkit by DLA) v2.11.1"
         
         github_url = "https://github.com/jimbon25/WIFI-TOOLKIT"
         saweria_url = "https://saweria.co/dimasla"
@@ -276,8 +276,9 @@ class WifiToolkitLite:
                 f"  {BLUE}[10]{NC} Bandwidth Limiter (evillimiter)",
                 f"  {YELLOW}[11]{NC} Geolocation Attack (Seeker)",
                 f"  {YELLOW}[12]{NC} Web/Server DDoS Attack",
-                f"  {BLUE}[13]{NC} Automated Vulnerability Scanner (Nuclei)",
-                f"  {RED}[14]{NC} Exit"
+                f"  {BLUE}[13]{NC} Hybrid Attack (Deauth + Beacon Flood)",
+                f"  {BLUE}[14]{NC} Automated Vulnerability Scanner (Nuclei)",
+                f"  {RED}[15]{NC} Exit"
             ]
             
             for option in menu_options:
@@ -286,7 +287,7 @@ class WifiToolkitLite:
             
             print(f"└{'─' * 58}┘\n") # Bottom border
 
-            print(f"{YELLOW}Enter your choice [1-14] and press Enter:{NC} ", end='')
+            print(f"{YELLOW}Enter your choice [1-15] and press Enter:{NC} ", end='')
             choice = input().strip()
 
             if choice in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
@@ -296,8 +297,10 @@ class WifiToolkitLite:
             elif choice == '12':
                 self.run_ddos_attack()
             elif choice == '13':
-                self._run_nuclei_scanner()
+                self._show_download_prompt()
             elif choice == '14':
+                self._run_nuclei_scanner()
+            elif choice == '15':
                 print(f"{YELLOW}Exiting... Thank you for using RATA!{NC}")
                 break
             else:

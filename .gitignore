@@ -70,3 +70,4 @@ cracking_log.txt
 /main/password_cracker_tool.py
 /main/nuclei_tool.py
 /COMPILING.md
+/main/hybrid_attack.py

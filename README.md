@@ -22,7 +22,7 @@
 </div>
 
 ## Screenshots
-![WIFI-TOOLKIT Screenshot](screenshot/wifiRATA2.png)
+![WIFI-TOOLKIT Screenshot](screenshot/updateSS.png)
 
 ### Table of Contents
 *   [Disclaimer](#-disclaimer)

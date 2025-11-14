@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 WiFi Toolkit Configuration Manager
 Handles flexible paths for handshakes, logs, and other data directories

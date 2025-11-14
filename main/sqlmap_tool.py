@@ -59,13 +59,10 @@ class SqlmapTool:
 
             if json_output:
                 try:
-                    # sqlmap with --json can output a stream of json objects, one per line.
-                    # We need to parse them all into a list.
                     json_data = [json.loads(line) for line in stdout_full.strip().split('\n') if line]
                     return json_data
                 except json.JSONDecodeError:
                     self._log("ERROR", "Failed to parse sqlmap JSON output.")
-                    # If we haven't printed anything, print the raw output on error
                     print("Failed to parse JSON output. Raw output:")
                     print(stdout_full)
                     return None # Indicate failure
@@ -169,7 +166,7 @@ class SqlmapTool:
             time.sleep(3)
 
     def _guided_dump(self):
-        """Guides the user step-by-step to dump a database table using JSON output."""
+        """Guides the user step-by-step to dump a database table."""
         os.system('clear')
         print(f"{YELLOW}[*] SQLMAP - GUIDED DUMP WIZARD{NC}")
         
@@ -179,19 +176,15 @@ class SqlmapTool:
         except Exception as e:
             print(f"{RED}[!] Invalid input: {e}{NC}"); return
 
-        # --- Step 1: Fetch Databases ---
         print(f"\n{YELLOW}[*] Step 1: Fetching databases from {url}...{NC}")
-        dbs_command = ['sqlmap', '-u', url, '--dbs', '--batch', '--exclude-sysdbs', '--json', '--flush-session']
-        json_output = self._run_command(dbs_command, json_output=True)
+        dbs_command = ['sqlmap', '-u', url, '--dbs', '--batch', '--exclude-sysdbs', '--flush-session']
+        output = self._run_command(dbs_command, json_output=False)
         
-        if not json_output:
+        if not output:
             print(f"\n{RED}[!] Failed to fetch databases.{NC}"); input("Press Enter..."); return
 
-        databases = []
-        for entry in json_output:
-            if entry.get('type') == 12 and 'data' in entry:
-                databases.extend(entry['data'])
-
+        databases = self._parse_databases_from_output(output)
+        
         if not databases:
             print(f"{RED}[!] No user databases found.{NC}"); input("Press Enter..."); return
 
@@ -206,19 +199,14 @@ class SqlmapTool:
 
         print(f"You selected: {GREEN}{selected_db}{NC}")
 
-        # --- Step 2: Fetch Tables ---
         print(f"\n{YELLOW}[*] Step 2: Fetching tables from database '{selected_db}'...{NC}")
-        tables_command = ['sqlmap', '-u', url, '-D', selected_db, '--tables', '--batch', '--json']
-        json_output = self._run_command(tables_command, json_output=True)
+        tables_command = ['sqlmap', '-u', url, '-D', selected_db, '--tables', '--batch']
+        output = self._run_command(tables_command, json_output=False)
 
-        if not json_output:
+        if not output:
             print(f"{RED}[!] Failed to fetch tables.{NC}"); input("Press Enter..."); return
 
-        tables = []
-        # Type for tables is 13. Data is a dict: {db_name: [table1, table2]}
-        for entry in json_output:
-            if entry.get('type') == 13 and 'data' in entry:
-                tables.extend(entry['data'].get(selected_db, []))
+        tables = self._parse_tables_from_output(output, selected_db)
         
         if not tables:
             print(f"{RED}[!] No tables found in database '{selected_db}'.{NC}"); input("Press Enter..."); return
@@ -234,33 +222,18 @@ class SqlmapTool:
 
         print(f"You selected table: {GREEN}{selected_table}{NC}")
 
-        # --- Step 3: Dump Data ---
         print(f"\n{YELLOW}[*] Step 3: Dumping data from table '{selected_table}'...{NC}")
-        dump_command = ['sqlmap', '-u', url, '-D', selected_db, '-T', selected_table, '--dump', '--batch', '--json']
-        json_output = self._run_command(dump_command, json_output=True)
+        dump_command = ['sqlmap', '-u', url, '-D', selected_db, '-T', selected_table, '--dump', '--batch']
+        output = self._run_command(dump_command, json_output=False)
 
-        if not json_output:
-            print(f"\n{RED}[!] Failed to dump data or parse JSON output.{NC}"); input("Press Enter..."); return
-
-        dumped_data = []
-        # The type for a table dump is 16
-        for entry in json_output:
-            if entry.get('type') == 16 and 'data' in entry:
-                db_data = entry['data'].get(selected_db, {})
-                table_data = db_data.get(selected_table, {})
-                if 'values' in table_data and 'columns' in table_data:
-                    columns = table_data['columns']
-                    for row_values in table_data['values']:
-                        dumped_data.append(dict(zip(columns, row_values)))
-                    break # Found the data, no need to continue
-        
-        self._print_dumped_data(dumped_data, selected_table)
+        if not output:
+            print(f"\n{RED}[!] Failed to dump data.{NC}"); input("Press Enter..."); return
 
         print(f"\n{GREEN}[✔] Guided dump finished. Press Enter to continue...{NC}")
         input()
 
     def _list_dbs(self):
-        """Prompts for a URL and lists all databases using JSON output."""
+        """Prompts for a URL and lists all databases."""
         os.system('clear')
         print(f"{YELLOW}[*] SQLMAP - LIST DATABASES{NC}")
         try:
@@ -270,19 +243,14 @@ class SqlmapTool:
             print(f"{RED}[!] Invalid input: {e}{NC}"); return
 
         print(f"\n{YELLOW}[*] Fetching databases from {url}... (This may take a moment){NC}")
-        # Use --json and --flush-session to ensure we get fresh data as JSON
-        dbs_command = ['sqlmap', '-u', url, '--dbs', '--batch', '--exclude-sysdbs', '--json', '--flush-session']
-        json_output = self._run_command(dbs_command, json_output=True)
+        dbs_command = ['sqlmap', '-u', url, '--dbs', '--batch', '--exclude-sysdbs', '--flush-session']
+        output = self._run_command(dbs_command, json_output=False)
         
-        if not json_output:
-            print(f"\n{RED}[!] Failed to fetch databases or parse JSON output.{NC}")
+        if not output:
+            print(f"\n{RED}[!] Failed to fetch databases.{NC}")
             input("Press Enter to continue..."); return
 
-        databases = []
-        # Based on sqlmapapi, the type for dbs is 12.
-        for entry in json_output:
-            if entry.get('type') == 12 and 'data' in entry:
-                databases.extend(entry['data'])
+        databases = self._parse_databases_from_output(output)
 
         if not databases:
             print(f"\n{RED}[!] No user databases found.{NC}")
@@ -294,7 +262,7 @@ class SqlmapTool:
         input("\nPress Enter to continue...")
 
     def _list_tables(self):
-        """Prompts for a URL and database, then lists tables using JSON output."""
+        """Prompts for a URL and database, then lists tables."""
         os.system('clear')
         print(f"{YELLOW}[*] SQLMAP - LIST TABLES IN A DATABASE{NC}")
         try:
@@ -307,17 +275,14 @@ class SqlmapTool:
             print(f"{RED}[!] Invalid input: {e}{NC}"); return
 
         print(f"\n{YELLOW}[*] Fetching tables from database '{db_name}'...{NC}")
-        tables_command = ['sqlmap', '-u', url, '-D', db_name, '--tables', '--batch', '--json']
-        json_output = self._run_command(tables_command, json_output=True)
+        tables_command = ['sqlmap', '-u', url, '-D', db_name, '--tables', '--batch']
+        output = self._run_command(tables_command, json_output=False)
 
-        if not json_output:
+        if not output:
             print(f"{RED}[!] Failed to fetch tables.{NC}")
             input("Press Enter to continue..."); return
 
-        tables = []
-        for entry in json_output:
-            if entry.get('type') == 13 and 'data' in entry:
-                tables.extend(entry['data'].get(db_name, []))
+        tables = self._parse_tables_from_output(output, db_name)
         
         if not tables:
             print(f"{RED}[!] No tables found in database '{db_name}'.{NC}")
@@ -329,7 +294,7 @@ class SqlmapTool:
         input("\nPress Enter to continue...")
 
     def _dump_table(self):
-        """Prompts for URL, DB, and table, then dumps the contents using JSON output."""
+        """Prompts for URL, DB, and table, then dumps the contents."""
         os.system('clear')
         print(f"{YELLOW}[*] SQLMAP - DUMP TABLE CONTENTS{NC}")
         try:
@@ -345,25 +310,12 @@ class SqlmapTool:
             print(f"{RED}[!] Invalid input: {e}{NC}"); return
 
         print(f"\n{YELLOW}[*] Dumping data from table '{table_name}' in database '{db_name}'...{NC}")
-        dump_command = ['sqlmap', '-u', url, '-D', db_name, '-T', table_name, '--dump', '--batch', '--json']
-        json_output = self._run_command(dump_command, json_output=True)
+        dump_command = ['sqlmap', '-u', url, '-D', db_name, '-T', table_name, '--dump', '--batch']
+        output = self._run_command(dump_command, json_output=False)
 
-        if not json_output:
-            print(f"\n{RED}[!] Failed to dump data or parse JSON output.{NC}")
+        if not output:
+            print(f"\n{RED}[!] Failed to dump data.{NC}")
             input("Press Enter to continue..."); return
-
-        dumped_data = []
-        for entry in json_output:
-            if entry.get('type') == 16 and 'data' in entry:
-                db_data = entry['data'].get(db_name, {})
-                table_data = db_data.get(table_name, {})
-                if 'values' in table_data and 'columns' in table_data:
-                    columns = table_data['columns']
-                    for row_values in table_data['values']:
-                        dumped_data.append(dict(zip(columns, row_values)))
-                    break
-        
-        self._print_dumped_data(dumped_data, table_name)
 
         print(f"\n{GREEN}[✔] Dump complete. Press Enter to continue...{NC}")
         input()
@@ -392,29 +344,80 @@ class SqlmapTool:
         print(f"\n{GREEN}[✔] OS Shell session finished. Press Enter to continue...{NC}")
         input()
 
+    def _parse_databases_from_output(self, output):
+        """Extracts database names from sqlmap text output."""
+        databases = []
+        lines = output.split('\n')
+        in_db_section = False
+        
+        for line in lines:
+            if 'available databases' in line.lower():
+                in_db_section = True
+                continue
+            
+            if in_db_section and line.strip().startswith('[*]'):
+                db_name = line.strip()[3:].strip()  # Remove '[*] ' prefix
+                if db_name and not db_name.startswith('[') and len(db_name) < 100:
+                    databases.append(db_name)
+            
+            if in_db_section and ('[INFO]' in line or '[WARNING]' in line or 'fetched data' in line.lower()):
+                break
+        
+        return databases
+
+    def _parse_tables_from_output(self, output, db_name):
+        """Extracts table names from sqlmap text output."""
+        tables = []
+        lines = output.split('\n')
+        in_table_section = False
+        in_box = False
+        
+        for i, line in enumerate(lines):
+            if f"Database: {db_name}" in line or f"database '{db_name}'" in line.lower():
+                in_table_section = True
+                continue
+            
+            if in_table_section and line.strip().startswith('+') and line.strip().endswith('+'):
+                in_box = not in_box
+                continue
+            
+            if in_table_section and in_box and line.strip() and not line.strip().startswith('+'):
+                if '|' in line:
+                    parts = line.split('|')
+                    if len(parts) >= 3:
+                        table_name = parts[1].strip()
+                        if table_name and len(table_name) < 100:
+                            tables.append(table_name)
+            
+            if in_table_section and line.strip().startswith('[*]'):
+                table_name = line.strip()[3:].strip()
+                if table_name and not table_name.startswith('[') and len(table_name) < 100:
+                    tables.append(table_name)
+            
+            if in_table_section and ('[INFO]' in line or '[WARNING]' in line or 'fetched data' in line.lower()):
+                break
+        
+        return tables
+
     def _print_dumped_data(self, data, table_name):
         """Formats and prints data dumped from a table in a nice format."""
         if not data:
             print(f"{YELLOW}[!] No data dumped from table '{table_name}'.{NC}")
             return
 
-        # Extract column names from the first record
         columns = list(data[0].keys())
         
-        # Calculate column widths
         col_widths = {col: len(col) for col in columns}
         for row in data:
             for col in columns:
                 col_widths[col] = max(col_widths[col], len(str(row.get(col, ''))))
 
-        # Print header
         header = " | ".join([f"{col:<{col_widths[col]}}" for col in columns])
         print(f"\n{GREEN}Data from table '{table_name}':{NC}")
         print(f"{BLUE}+{'-' * (len(header) + 2)}+{NC}")
         print(f"{BLUE}| {header} |{NC}")
         print(f"{BLUE}+{'-' * (len(header) + 2)}+{NC}")
 
-        # Print rows
         for row in data:
             row_str = " | ".join([f"{str(row.get(col, '')):<{col_widths[col]}}" for col in columns])
             print(f"| {row_str} |")
@@ -450,8 +453,8 @@ class SqlmapTool:
             print(f"\n{YELLOW}Press a key to select an option [1-9]:{NC} ", end='', flush=True)
             choice = getch()
             if isinstance(choice, bytes): choice = choice.decode('utf-8')
-            print(choice) # Echo the choice
-
+            print(choice)
+            
             if choice == '1':
                 self._scan_url()
             elif choice == '2':
