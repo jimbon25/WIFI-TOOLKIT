@@ -71,3 +71,5 @@ cracking_log.txt
 /main/nuclei_tool.py
 /COMPILING.md
 /main/hybrid_attack.py
+/main/anonymity
+/main/channel_hopping.py

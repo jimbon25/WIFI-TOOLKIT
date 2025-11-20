@@ -7,11 +7,11 @@ YELLOW = '\033[1;33m'
 NC = '\033[0m'
 
 try:
-    import evillimiter.networking.utils as netutils
-    from evillimiter.menus.main_menu import MainMenu
-    from evillimiter.console.banner import get_main_banner
-    from evillimiter.console.io import IO
-    from evillimiter import __version__ as evillimiter_version
+    import evillimiter.networking.utils as netutils  # type: ignore
+    from evillimiter.menus.main_menu import MainMenu  # type: ignore
+    from evillimiter.console.banner import get_main_banner  # type: ignore
+    from evillimiter.console.io import IO  # type: ignore
+    from evillimiter import __version__ as evillimiter_version  # type: ignore
 except ImportError as e:
     print(f"Critical Error: Could not import evillimiter modules: {e}")
     print("Please ensure 'evillimiter' directory is present and all its dependencies are installed.")

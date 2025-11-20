@@ -104,8 +104,22 @@ class EvilTwin:
                     match = re.search(r'dev\s+(\S+)', route)
                     if match:
                         iface = match.group(1)
-                        if iface != self.deauth_interface and iface != self.ap_interface:
+                        iface_stripped = iface.rstrip('mon')
+                        if (iface_stripped != self.deauth_interface and 
+                            iface != self.ap_interface and
+                            iface_stripped != self.ap_interface):
                             return iface
+            
+            ip_link_output = self._run_command(['ip', 'link', 'show'], quiet=True)
+            if ip_link_output and ip_link_output.stdout:
+                lines = ip_link_output.stdout.strip().split('\n')
+                for i, line in enumerate(lines):
+                    if 'state UP' in line or 'state UNKNOWN' in line:
+                        match = re.search(r'^\d+:\s+(\S+):', line)
+                        if match:
+                            iface = match.group(1)
+                            if iface.startswith(('en', 'eth')) and iface != self.ap_interface:
+                                return iface
         except Exception as e:
             self._log("ERROR", f"Failed to detect internet interface: {e}")
         return None
@@ -179,12 +193,30 @@ class EvilTwin:
 
         self.internet_interface = self._get_internet_interface()
         if not self.internet_interface:
-            print(f"{RED}[!] Could not automatically detect internet-connected interface.{NC}")
-            manual_iface = input(f"{YELLOW}[?] Please manually enter the internet-connected interface (e.g., eth0, wlan0): {NC}").strip()
+            print(f"{YELLOW}[!] Could not automatically detect internet-connected interface.{NC}")
+            
+            try:
+                all_ifaces_output = self._run_command(['ip', 'link', 'show'], quiet=True)
+                if all_ifaces_output:
+                    print(f"\n{YELLOW}Available interfaces:{NC}")
+                    for line in all_ifaces_output.stdout.split('\n'):
+                        if line.strip() and re.match(r'^\d+:', line):
+                            match = re.search(r'^\d+:\s+(\S+):', line)
+                            if match:
+                                iface = match.group(1)
+                                if iface not in [self.deauth_interface, self.ap_interface, 'lo']:
+                                    state = "UP" if "UP" in line else "DOWN"
+                                    print(f"  • {iface:<15} [{state}]")
+                    print()
+            except:
+                pass
+            
+            manual_iface = input(f"{YELLOW}[?] Enter internet-connected interface (e.g., eth0, enp2s0f1) or press Enter to skip: {NC}").strip()
             if manual_iface:
                 self.internet_interface = manual_iface
+                print(f"{GREEN}[✔] Using {manual_iface} for internet bridge{NC}")
             else:
-                print(f"{RED}[!] No internet interface provided. Clients may not have internet access.{NC}")
+                print(f"{RED}[!] No internet interface provided. Clients will connect but won't have internet access.{NC}")
                 self._log("WARNING", "No internet interface provided by user. NAT will not be configured.")
 
         if self.internet_interface:
@@ -197,7 +229,7 @@ class EvilTwin:
                         self.original_forward_policy = match.group(1)
             except Exception as e:
                 self._log("WARNING", f"Could not determine original FORWARD policy: {e}")
-                self.original_forward_policy = "ACCEPT" # Default to ACCEPT if unable to determine
+                self.original_forward_policy = "ACCEPT"
 
             self._run_command(['sysctl', '-w', 'net.ipv4.ip_forward=1'], quiet=True)
             self._run_command(['iptables', '-P', 'FORWARD', 'ACCEPT'], quiet=True)

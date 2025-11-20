@@ -4,6 +4,41 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.11.2] - 2025-11-20
+
+### Added
+- **Anonymity Engine Integration**: Comprehensive stealth and anonymity features fully integrated into the WiFi attack suite for advanced operational security:
+  - **Multi-Level Stealth Presets**: Three configurable anonymity profiles (Light, Balanced, Aggressive) with dynamic parameter adjustment
+  - **MAC Address Randomization**: Automatic MAC spoofing with realistic vendor OUI patterns to avoid detection
+  - **Packet Timing Optimization**: Intelligent packet spacing and inter-arrival time manipulation to evade network anomaly detection
+  - **Parameter Randomization**: Dynamic adjustment of beacon intervals, TX power, and attack patterns to mimic legitimate network behavior
+  - **Secure Evidence Cleanup**: Automatic removal of logs, temporary files, and forensic artifacts post-attack with multi-pass overwriting
+  - **Real-Time Attack Statistics**: Comprehensive logging of attack parameters, timings, and effectiveness metrics
+  
+### Integrated Anonymity Features in Attack Functions:
+- **Beacon Flood Attack** - Full integration with stealth parameters:
+  - Uses `prepare_stealth_attack()` with TX Power and Beacon Interval optimization
+  - Realistic packet timing via `wait_for_next_packet()`
+  - Secure cleanup with forensic evidence removal
+  
+- **Hybrid Attack (Deauth + Beacon Flood)** - Complete anonymity support:
+  - Passes anonymity preset to hybrid attack orchestration
+  - Multi-threaded stealth attack execution
+  - Coordinated deauthentication and beacon flood with timing control
+
+- **Mass Deauthentication (mdk4)** & **Interactive Deauth (aireplay-ng)** - Status Display:
+  - Shows anonymity engine status and active preset
+  - Foundation for future full stealth integration
+  
+- **Planned Integration**: DoS Attacks (Smart Adaptive) and PMKID Attack to include full anonymity support
+
+### Added
+- **Anonymity Settings Menu**: New dedicated menu option in main interface for:
+  - Viewing current anonymity preset and engine status
+  - Switching between Light/Balanced/Aggressive presets on-the-fly
+  - Accessing anonymity engine statistics and metrics
+  - Real-time stealth feature status monitoring
+  
 ## [2.11.1] - 2025-11-14
 
 ### Added
