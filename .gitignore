@@ -57,7 +57,11 @@ wifi-env/
 htmlcov/
 .tox/
 
-# Development documentation (auto-generated)
+# Development documentation
+/docs/DEVELOPER_GUIDE.md
+/docs/DI_FRAMEWORK_GUIDE.md
+/docs/REMEDIATION_COMPLETE.md
+/docs/REMEDIATION_REPORT.md
 /docs/development/
 
 # Log files
