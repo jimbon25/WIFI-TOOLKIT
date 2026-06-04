@@ -1,4 +1,3 @@
-
 import os
 import sys
 import subprocess
@@ -141,25 +140,30 @@ class WifiToolkitLite:
         self._print_header()
         print(f"{YELLOW}[*] Checking dependencies for Web/Server DDoS Attack (aiohttp, fake-useragent, PyYAML)...{NC}")
         missing_deps = []
-        deps_to_check = ['aiohttp', 'fake_useragent', 'yaml'] # Note: yaml is the module name for PyYAML package
-
-        for dep in deps_to_check:
+        
+        # Safe dependency checking - use importlib instead of __import__
+        import importlib
+        deps_to_check = {
+            'aiohttp': 'aiohttp',
+            'fake_useragent': 'fake-useragent',
+            'yaml': 'PyYAML'
+        }
+        
+        for module_name, package_name in deps_to_check.items():
             try:
-                __import__(dep)
+                importlib.import_module(module_name)
             except ImportError:
-                missing_deps.append(dep)
+                missing_deps.append(package_name)
         
         if missing_deps:
             print(f"\n{RED}[!] Missing required Python dependencies for Web/Server DDoS Attack: {', '.join(missing_deps)}{NC}")
-            pip_deps = [dep.replace('yaml', 'PyYAML').replace('fake_useragent', 'fake-useragent') for dep in missing_deps]
-            print(f"{YELLOW}    Please install them using: pip install {' '.join(pip_deps)}{NC}")
+            print(f"{YELLOW}    Please install them using: pip install {' '.join(missing_deps)}{NC}")
             print(f"\n{GREEN}Press any key to return to the main menu...{NC}")
             getch()
             return False
         
         print(f"{GREEN}[✔] All Web/Server DDoS Attack dependencies are installed.{NC}")
         time.sleep(2)
-        return True
 
     def run_seeker_attack(self):
         """Initializes and runs the Seeker geolocation attack."""
@@ -341,3 +345,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    

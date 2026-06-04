@@ -25,6 +25,14 @@ YELLOW = '\033[1;33m'
 BLUE = '\033[0;34m'
 NC = '\033[0m'
 
+
+def clear_screen():
+    """Clear terminal screen in a safe way (without os.system)."""
+    # Use ANSI escape sequence (works on Unix/Linux/Mac)
+    sys.stdout.write('\033[2J\033[H')
+    sys.stdout.flush()
+
+
 class NmapTool:
     """
     A class to provide a menu-driven, automated interface for nmap.
@@ -76,7 +84,7 @@ class NmapTool:
 
     def _show_nmap_menu(self):
         """Displays the main menu for the nmap tool."""
-        os.system('clear')
+        clear_screen()
         print(f"{BLUE}---[ Network Mapper (nmap) ]---{NC}")
         print(f"  [{GREEN}1{NC}] Quick Scan (-T4 -F)")
         print(f"  [{GREEN}2{NC}] Intense Scan (-T4 -A -v)")
@@ -88,7 +96,7 @@ class NmapTool:
         print(f"{BLUE}--------------------------------{NC}")
 
     def _quick_scan(self):
-        os.system('clear')
+        clear_screen()
         print(f"{YELLOW}[*] NMAP - QUICK SCAN{NC}")
         target = self._get_target()
         if not target: return
@@ -100,7 +108,7 @@ class NmapTool:
         input()
 
     def _intense_scan(self):
-        os.system('clear')
+        clear_screen()
         print(f"{YELLOW}[*] NMAP - INTENSE SCAN{NC}")
         target = self._get_target()
         if not target: return
@@ -112,7 +120,7 @@ class NmapTool:
         input()
 
     def _ping_scan(self):
-        os.system('clear')
+        clear_screen()
         print(f"{YELLOW}[*] NMAP - PING SCAN (HOST DISCOVERY){NC}")
         target = self._get_target()
         if not target: return
@@ -124,7 +132,7 @@ class NmapTool:
         input()
 
     def _vuln_scan(self):
-        os.system('clear')
+        clear_screen()
         print(f"{YELLOW}[*] NMAP - VULNERABILITY SCAN{NC}")
         print(f"{YELLOW}[!] This scan uses the 'vulners' script and requires an internet connection.{NC}")
         target = self._get_target()
@@ -137,7 +145,7 @@ class NmapTool:
         input()
 
     def _udp_scan(self):
-        os.system('clear')
+        clear_screen()
         print(f"{YELLOW}[*] NMAP - UDP SCAN{NC}")
         target = self._get_target()
         if not target: return
@@ -149,7 +157,7 @@ class NmapTool:
         input()
 
     def _custom_scan(self):
-        os.system('clear')
+        clear_screen()
         print(f"{YELLOW}[*] NMAP - CUSTOM SCAN{NC}")
         target = self._get_target()
         if not target: return

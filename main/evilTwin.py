@@ -159,7 +159,7 @@ class EvilTwin:
                     print(f"{RED}[!] WPA2 passphrase must be at least 8 characters long.{NC}")
         
         print(f"{YELLOW}[*] Preparing interface {self.ap_interface} for AP mode...{NC}")
-        self._run_command(['systemctl', 'stop', 'NetworkManager'], quiet=True)
+        self._run_command(['nmcli', 'dev', 'set', self.ap_interface, 'managed', 'no'], quiet=True)
         self._run_command(['airmon-ng', 'check', 'kill'], quiet=True)
         self._run_command(['ifconfig', self.ap_interface, 'down'], quiet=True)
         self._run_command(['iw', 'dev', self.ap_interface, 'set', 'type', 'managed'], quiet=True)
@@ -208,7 +208,7 @@ class EvilTwin:
                                     state = "UP" if "UP" in line else "DOWN"
                                     print(f"  • {iface:<15} [{state}]")
                     print()
-            except:
+            except (ValueError, TypeError):
                 pass
             
             manual_iface = input(f"{YELLOW}[?] Enter internet-connected interface (e.g., eth0, enp2s0f1) or press Enter to skip: {NC}").strip()
@@ -423,8 +423,9 @@ class EvilTwin:
             self._run_command(['iw', 'dev', self.ap_interface, 'set', 'type', 'managed'], quiet=True)
             self._run_command(['ifconfig', self.ap_interface, 'up'], quiet=True)
 
-        print(f"{YELLOW}[*] Restarting NetworkManager...{NC}")
-        self._run_command(['systemctl', 'start', 'NetworkManager'], quiet=True)
+        if self.ap_interface:
+            print(f"{YELLOW}[*] Restoring NetworkManager management for {self.ap_interface}...{NC}")
+            self._run_command(['nmcli', 'dev', 'set', self.ap_interface, 'managed', 'yes'], quiet=True)
         print(f"{YELLOW}[*] Restarting systemd-resolved...{NC}")
         self._run_command(['systemctl', 'start', 'systemd-resolved'], quiet=True) # Restart systemd-resolved
 

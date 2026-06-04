@@ -1,0 +1,48 @@
+# WiFi-Tool Requirements
+# Generated from comprehensive codebase audit
+# This file pins versions to ensure reproducible builds
+
+# Core networking and scanning
+requests>=2.28.0
+scapy>=2.5.0
+netaddr>=0.9.0
+netifaces>=0.11.0
+
+# System monitoring and utilities
+psutil>=5.9.0
+colorama>=0.4.4
+tqdm>=4.64.0
+terminaltables>=3.1.10
+
+# Configuration and data handling
+PyYAML>=6.0
+packaging>=22.0
+
+# Advanced networking and DDoS tools
+aiohttp>=3.8.0
+fake-useragent>=1.1.0
+
+# Optional: Crypto libraries (for advanced features)
+cryptography>=37.0.0
+
+# Development and testing (optional)
+# pytest>=7.0.0
+# pytest-cov>=3.0.0
+# flake8>=4.0.0
+# black>=22.0.0
+
+# NOTE: External tools required (install via system package manager):
+# - airmon-ng (aircrack-ng suite)
+# - aireplay-ng
+# - airodump-ng
+# - hostapd
+# - dnsmasq
+# - mdk4
+# - sqlmap
+# - nmap
+# - nuclei
+# - hashcat
+# - john (john the ripper)
+# - ngrok
+# - php
+# - ssh
