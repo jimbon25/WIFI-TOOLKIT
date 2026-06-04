@@ -5,8 +5,9 @@
 /TODO.md
 /ssidlist.txt
 
-# Compiled executable
+# Compiled executables
 wifiRATA
+wifiToolkit
 
 # Blacklist files
 blacklist
@@ -39,6 +40,16 @@ build/
 venv/
 ENV/
 env/
+wifi-env/
+
+# Environment and secrets
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.p7b
+*.jks
 
 # Testing and coverage
 .pytest_cache/
@@ -49,9 +60,11 @@ htmlcov/
 # Development documentation (auto-generated)
 /docs/development/
 
-# Log files (user home directory)
+# Log files
 ~/.wifi-toolkit_logs/
 *.log
+/main/rogue_ap_detection/data/logs/
+/seeker/logs/
 
 # Configuration files (user-specific)
 .wifi_toolkit_config
@@ -60,6 +73,15 @@ htmlcov/
 # Cracking results and logs
 cracking_results/
 cracking_log.txt
+
+# Session and module data
+/main/rogue_ap_detection/data/
+/main/handshakes/
+/seeker/db/
+**/data/*.db
+**/data/*.json
+**/data/*.csv
+**/results/
 
 # Temporary and build files
 *.tmp
