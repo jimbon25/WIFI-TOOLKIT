@@ -96,6 +96,8 @@ cracking_log.txt
 /main/password_cracker_tool.py
 /main/nuclei_tool.py
 /COMPILING.md
+/check_dependencies.py
+/fix_bare_excepts.py
 /main/hybrid_attack.py
 /main/anonymity
 /main/channel_hopping.py

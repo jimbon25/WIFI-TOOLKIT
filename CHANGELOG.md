@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [3.0.0] - 2026-06-04
+
+### Added
+- **Signal Safety**: Added SIGTERM signal handler to ensure clean exit and network restoration during system shutdowns.
+- **Interface Locking**: Implemented thread-safe `interface_lock` to prevent background stealth operations from interrupting active scans or attacks.
+- **Database Thread-Safety**: Added mutex locking to Rogue AP detection database for safe concurrent access.
+
+### Changed
+- **Network Isolation**: Replaced global `NetworkManager` shutdown with per-interface isolation using `nmcli`.
+- **Resource Management**: Background threads are now daemonized to prevent application hangs on exit.
+- **File System Security**: Standardized all temporary filenames to use unique PID and Timestamp patterns to avoid multi-user collisions.
+
+### Fixed
+- **Stealth Engine**: Corrected a critical initialization bug where the active wireless interface was not properly passed to the stealth sub-modules.
+- **Process Lifecycle**: Resolved various "hang on exit" issues by improving thread joining and event handling during the cleanup phase.
+
 ## [2.11.2] - 2025-11-20
 
 ### Added
