@@ -93,6 +93,8 @@ cracking_log.txt
 **/tmp/
 
 /main/wifi_toolkit.py
+/main/utils/telemetry_config.py
+/main/utils/telemetry.py
 /main/password_cracker_tool.py
 /main/nuclei_tool.py
 /COMPILING.md
